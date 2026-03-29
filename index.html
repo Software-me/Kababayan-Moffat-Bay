@@ -3,72 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Loreine's Bay Resort Lodge</title>
+    <title>Lito 3D Self-Driving Car Simulator</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header class="site-header">
-      <nav class="nav nav--left" aria-label="Section navigation">
-        <a href="index.html" class="nav__link nav__link--active">Home</a>
-        <a href="about.html" class="nav__link">About Us</a>
-        <a href="attractions.html" class="nav__link">Attractions</a>
-      </nav>
-
-      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
-        <span class="brand__mark" aria-hidden="true">
-          <svg
-            class="brand__svg"
-            viewBox="0 0 24 24"
-            width="42"
-            height="42"
-            role="img"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <title>Loreine's Bay Resort Lodge</title>
-            <circle cx="12" cy="5" r="3" />
-            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
-          </svg>
-        </span>
-        <span class="brand__name">Loreine's Bay Resort Lodge</span>
-      </a>
-
-      <nav class="nav nav--right" aria-label="Account navigation">
-        <a href="room_reservation.html" class="nav__link">Lodging</a>
-        <a href="my_reservations.html" class="nav__link">My Reservations</a>
-        <a href="contact.html" class="nav__link">Contact Us</a>
-        <a href="login.html" class="btn btn--outline">Login/Register</a>
-      </nav>
-    </header>
-
-    <main id="home" class="hero" role="main">
-      <div class="hero__overlay hero__overlay--home">
-        <h1 class="hero__title">
-          <span class="hero__title-accent" tabindex="0">Loreine's Bay Resort Lodge</span>
-        </h1>
-        <p class="hero__disclaimer">
-          (This is just a sample project. If interested, I am a freelancer based on software or any web application such as mobile apps,
-          websites, etc.)
-        </p>
-        <div class="hero__contact" aria-label="How to reach the developer">
-          <p class="hero__contact__title">Contact me</p>
-          <p class="hero__contact__text">
-            You can reach me on <strong>Facebook Messenger</strong>, or <strong>text or call</strong>
-            <a href="tel:+15628105815">(562) 810-5815</a>. Email:
-            <a href="mailto:leclevia@my365.bellevue.edu">leclevia@my365.bellevue.edu</a>
-            or
-            <a href="mailto:eclevlit2003@yahoo.com">eclevlit2003@yahoo.com</a>.
-          </p>
+    <div id="ui">
+      <div id="title">Lito 3D Self-Driving Car (Driver View)</div>
+      <div id="hud">
+        <div class="hud-section">
+          <span class="label">Mode:</span>
+          <span id="modeLabel">Autonomous</span>
         </div>
-        <p class="hero__text">
-          We have something for everyone. Explore our attractions and guided tours, or simply relax on the sandy shores.
-          <strong>The choice is yours.</strong>
-        </p>
-        <a href="about.html" class="btn btn--primary">Learn More</a>
+        <div class="hud-section">
+          <span class="label">Speed:</span>
+          <span id="speedLabel">0.0 m/s</span>
+        </div>
+        <div class="hud-section">
+          <span class="label">Status:</span>
+          <span id="statusLabel">Following lane</span>
+        </div>
       </div>
-    </main>
+    </div>
+
+    <canvas id="view"></canvas>
+    <!-- 2D overlay: dashboard + speedometer (drawn in js/main.js) -->
+    <canvas id="dash"></canvas>
+
+    <div id="steering-wheel-container">
+      <span id="steering-wheel-label" class="steering-wheel-caption">Steering wheel</span>
+      <div id="steering-wheel" role="img" aria-label="Steering wheel">
+        <div id="steering-center"></div>
+      </div>
+    </div>
+
+    <div id="controls-panel">
+      <button id="toggleModeBtn">Toggle Manual / Auto</button>
+      <button id="resetBtn">Reset Scene</button>
+    </div>
+
+    <!-- Three.js global, then ES module app (needs http:// server, not file://) -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script type="module" src="js/main.js"></script>
   </body>
 </html>
