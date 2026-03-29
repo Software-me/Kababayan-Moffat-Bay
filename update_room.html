@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Room - Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About Us</a>
+        <a href="attractions.html" class="nav__link">Attractions</a>
+      </nav>
+
+      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            class="brand__svg"
+            viewBox="0 0 24 24"
+            width="42"
+            height="42"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+          >
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="room_reservation.html" class="nav__link">Lodging</a>
+        <a href="my_reservations.html" class="nav__link">My Reservations</a>
+        <a href="contact.html" class="nav__link">Contact Us</a>
+        <a href="login.html" class="btn btn--outline">Login/Register</a>
+      </nav>
+    </header>
+
+    <main class="summary-main">
+      <div class="summary-card" style="max-width: 32rem">
+        <h1 class="summary-card__title">Update Room Information</h1>
+        <p class="summary-card__note" style="margin-bottom: 1.25rem">
+          Static HTML preview. Your PHP version connects to MySQL and runs <code>UPDATE Rooms SET total_rooms, available_rooms …</code> on submit.
+        </p>
+
+        <form id="update-room-form" class="booking-form" method="post" action="#">
+          <label for="room_id">Room Type:</label>
+          <select id="room_id" name="room_id" required>
+            <option value="1">Standard - Single King</option>
+            <option value="2">Standard - Single Queen</option>
+            <option value="3">Standard - Double Queen</option>
+            <option value="4">Deluxe - Single King</option>
+            <option value="5">Deluxe - Single Queen</option>
+            <option value="6">Deluxe - Double Queen</option>
+            <option value="7">Suite - 1 Room</option>
+            <option value="8">Suite - 2 Room</option>
+          </select>
+
+          <label for="total_rooms">Total Rooms:</label>
+          <input type="number" id="total_rooms" name="total_rooms" min="0" required />
+
+          <label for="available_rooms">Available Rooms:</label>
+          <input type="number" id="available_rooms" name="available_rooms" min="0" required />
+
+          <button type="submit" class="btn btn--primary" style="margin-top: 1.25rem">Update Room</button>
+        </form>
+        <p id="update-feedback" class="summary-card__empty" style="margin-top: 1rem" hidden></p>
+      </div>
+    </main>
+
+    <script>
+      document.getElementById("update-room-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var form = e.target;
+        var roomLabel = form.room_id.options[form.room_id.selectedIndex].text;
+        var total = form.total_rooms.value;
+        var avail = form.available_rooms.value;
+        var msg =
+          "Preview only (no database).\n\nWould update room_id " +
+          form.room_id.value +
+          " (" +
+          roomLabel +
+          "):\n  total_rooms = " +
+          total +
+          "\n  available_rooms = " +
+          avail;
+        alert(msg);
+        var out = document.getElementById("update-feedback");
+        out.textContent =
+          "Static preview: values were not saved. Deploy the PHP file with MySQL to persist changes.";
+        out.hidden = false;
+      });
+    </script>
+  </body>
+</html>

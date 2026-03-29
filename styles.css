@@ -1,0 +1,2 @@
+/* Alias for course / PHP pages that link to `styles.css` — full rules live in `style.css`. */
+@import url("style.css");

@@ -1,0 +1,1109 @@
+/* ======================================
+   Loreine's Bay Resort Lodge — layout & theme
+====================================== */
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --gray-active: #e0e0e0;
+  --overlay: rgba(255, 255, 255, 0.7);
+  --font-sans: Arial, Helvetica, sans-serif;
+  --font-serif: Cambria, Georgia, "Times New Roman", serif;
+  --hero-home: url("https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/lodging-2.jpg?raw=true");
+  --hero-reservations: url("https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/reservation-1.jpg?raw=true");
+  --hero-lookup: url("https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/lookup.jpg?raw=true");
+  --nav-hover-bg: linear-gradient(180deg, rgba(25, 118, 210, 0.14), rgba(25, 118, 210, 0.06));
+  --nav-hover-color: #0d47a1;
+  --nav-hover-shadow: 0 5px 18px rgba(13, 71, 161, 0.22);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  color: var(--black);
+  background: var(--white);
+}
+
+/* ======================================
+   Header
+====================================== */
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem clamp(1rem, 4vw, 2.5rem);
+  background: var(--white);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(0.75rem, 2vw, 1.75rem);
+}
+
+.nav--left {
+  flex: 1 1 0;
+  justify-content: flex-start;
+}
+
+.nav--right {
+  flex: 1 1 0;
+  justify-content: flex-end;
+}
+
+.nav__link {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--black);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.45rem 0.65rem;
+  border-radius: 6px;
+  display: inline-block;
+  transform-origin: center;
+  transition:
+    background 0.28s ease,
+    color 0.28s ease,
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.28s ease;
+}
+
+.nav__link:hover {
+  background: var(--nav-hover-bg);
+  color: var(--nav-hover-color);
+  transform: scale(1.08);
+  box-shadow: var(--nav-hover-shadow);
+}
+
+.nav__link--active {
+  background: var(--gray-active);
+}
+
+.nav__link--active:hover {
+  background: #cfcfcf;
+  color: #111;
+  transform: scale(1.07);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+}
+
+/* Center logo */
+.brand {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: var(--black);
+  text-align: center;
+  min-width: 8rem;
+  transform-origin: center;
+  transition:
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.28s ease,
+    filter 0.28s ease;
+}
+
+.brand:hover {
+  transform: scale(1.07);
+  color: var(--nav-hover-color);
+}
+
+.brand:hover .brand__svg {
+  filter: drop-shadow(0 3px 8px rgba(13, 71, 161, 0.35));
+}
+
+.brand__mark {
+  display: block;
+  line-height: 0;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand:hover .brand__mark {
+  transform: scale(1.05);
+}
+
+.brand__svg {
+  display: block;
+}
+
+.brand__name {
+  margin-top: 0.35rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.nav__link:focus-visible,
+.site-header .btn--outline:focus-visible,
+.brand:focus-visible {
+  outline: 2px solid var(--nav-hover-color);
+  outline-offset: 3px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.08s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--outline {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
+}
+
+.btn--outline:hover {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* Header “Login/Register” — match nav hover polish */
+.site-header .btn--outline {
+  transform-origin: center;
+  transition:
+    background 0.28s ease,
+    color 0.28s ease,
+    transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
+}
+
+.site-header .btn--outline:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  background: #111;
+  color: var(--white);
+  border-color: #111;
+}
+
+.btn--primary {
+  margin-top: 1.75rem;
+  background: var(--black);
+  color: var(--white);
+  padding: 0.65rem 1.75rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.btn--primary:hover {
+  background: #222;
+}
+
+/* ======================================
+   Hero
+====================================== */
+.hero {
+  min-height: calc(100vh - 5.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vw, 3rem);
+  background-color: #2a4a5c;
+  background-image: var(--hero-home);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Lodging booking hero uses same backdrop as course styles.css `.hero` */
+.hero.lodging-hero {
+  background-image: var(--hero-home);
+}
+
+.hero__overlay {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  background: var(--overlay);
+  text-align: center;
+  border-radius: 0;
+}
+
+.hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 3.8vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--black);
+  margin-bottom: 0.65rem;
+}
+
+.hero__overlay--home {
+  max-width: min(32rem, 100%);
+}
+
+.hero__disclaimer {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #444;
+  font-style: italic;
+  margin: 0 0 1rem;
+  max-width: 28rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero__contact {
+  text-align: center;
+  margin: 0 0 1.15rem;
+  padding: 0.85rem 0.65rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.hero__contact__title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 0.45rem;
+  font-family: var(--font-serif);
+}
+
+.hero__contact__text {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: #333;
+  margin: 0;
+}
+
+.hero__contact__text a {
+  color: #0d47a1;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hero__contact__text a:hover {
+  color: #1565c0;
+}
+
+/* Loreine's Bay Resort Lodge title — floating + shifting colors on hover/focus */
+.hero__title-accent {
+  display: inline-block;
+  cursor: default;
+  transition: transform 0.35s ease, color 0.35s ease;
+}
+
+.hero__title-accent:hover,
+.hero__title-accent:focus-visible {
+  animation: loreine-float 2.2s ease-in-out infinite, loreine-colorwave 5s linear infinite;
+  background-image: linear-gradient(
+    90deg,
+    #0d47a1,
+    #6a1b9a,
+    #00838f,
+    #f57c00,
+    #c2185b,
+    #1565c0,
+    #0d47a1
+  );
+  background-size: 350% 100%;
+  background-position: 0% center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 14px rgba(13, 71, 161, 0.35));
+  outline: none;
+}
+
+.hero__title-accent:focus-visible {
+  box-shadow: 0 0 0 3px rgba(13, 71, 161, 0.35);
+  border-radius: 4px;
+}
+
+@keyframes loreine-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-10px) rotate(-1.5deg);
+  }
+  75% {
+    transform: translateY(-6px) rotate(1.5deg);
+  }
+}
+
+@keyframes loreine-colorwave {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 100% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__title-accent:hover,
+  .hero__title-accent:focus-visible {
+    animation: none;
+    color: var(--nav-hover-color);
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    filter: none;
+    transform: none;
+  }
+}
+
+.hero__text {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--black);
+  margin-bottom: 20px;
+}
+
+/* Course stylesheet: `.hero-text` panel (use on any hero if needed) */
+.hero-text {
+  background-color: rgba(255, 255, 255, 0.7);
+  padding: 20px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.hero-text h1 {
+  font-family: var(--font-serif);
+  font-weight: bold;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.hero-text p {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.hero-text p a {
+  color: inherit;
+  font-weight: 700;
+}
+
+.hero-text h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  margin: 1.25rem 0 0.75rem;
+}
+
+.hero-text .social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hero-text .social-icons a {
+  display: inline-flex;
+}
+
+/* ======================================
+   Site footer
+====================================== */
+.site-footer {
+  text-align: center;
+  padding: 1.25rem 1rem;
+  background: #f0f0f0;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.hero__text strong {
+  font-weight: 700;
+}
+
+.hero .btn--primary {
+  margin-top: 1.75rem;
+}
+
+/* ======================================
+   About page
+====================================== */
+.about-hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 4vw, 2.5rem);
+  background-color: #1e3a4a;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/landing_header.jpg?raw=true");
+  background-size: cover;
+  background-position: center;
+}
+
+.about-hero__inner {
+  max-width: 40rem;
+  text-align: center;
+}
+
+.about-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+.about-hero__subtitle {
+  margin-top: 1rem;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.5;
+}
+
+.about-section {
+  padding: clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 20px);
+}
+
+.about-item,
+.attraction-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 3vw, 2rem) clamp(1rem, 4vw, 2.5rem);
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+}
+
+.attractions-list {
+  padding: clamp(1rem, 3vw, 2rem) 0 clamp(3rem, 6vw, 4rem);
+}
+
+.image-container {
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.image-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+
+.description h3 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+.description p {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #222;
+}
+
+.call-to-action {
+  text-align: center;
+  padding: 40px 20px;
+  background: #f0f0f0;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.call-to-action h3 {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  max-width: 52rem;
+  margin: 0 auto 20px;
+  line-height: 1.45;
+}
+
+.call-to-action .btn--primary {
+  margin-top: 0;
+}
+
+/* ======================================
+   Lodging / room reservation
+====================================== */
+.lodging-hero {
+  align-items: flex-start;
+  padding-top: clamp(2rem, 5vw, 3rem);
+  padding-bottom: clamp(2rem, 5vw, 3rem);
+  min-height: auto;
+}
+
+.lodging-hero__panel {
+  max-width: 32rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: var(--overlay);
+  text-align: left;
+}
+
+.lodging-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 0.5rem;
+}
+
+.lodging-hero__intro {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  color: #222;
+}
+
+.booking-form label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-top: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.booking-form label:first-of-type {
+  margin-top: 0;
+}
+
+.booking-form input[type="date"],
+.booking-form select,
+.booking-form textarea {
+  width: 100%;
+  max-width: 100%;
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.booking-form textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.booking-form__submit {
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 16rem;
+}
+
+.room-types {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 6vw, 4rem);
+}
+
+.room-types h2 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 1.85rem);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.room-type {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 2px solid #ddd;
+}
+
+/* ======================================
+   Reservation summary
+====================================== */
+.summary-main {
+  min-height: calc(100vh - 5.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
+  background: #f8f8f8;
+}
+
+.summary-card {
+  max-width: 28rem;
+  width: 100%;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+}
+
+.summary-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-card__empty {
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.summary-details {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.summary-details dt {
+  font-weight: 700;
+}
+
+.summary-details dd {
+  margin: 0;
+}
+
+.summary-card__note {
+  font-size: 0.82rem;
+  color: #555;
+  line-height: 1.45;
+  margin-bottom: 1.25rem;
+}
+
+.summary-card__note code {
+  font-size: 0.8em;
+}
+
+.summary-card .btn--primary {
+  margin-top: 0;
+  margin-right: 0.75rem;
+}
+
+.summary-card__home {
+  margin-top: 0.75rem;
+  display: inline-flex;
+}
+
+.btn--danger {
+  background: #b71c1c;
+  color: var(--white);
+  border: 1px solid #b71c1c;
+}
+
+.btn--danger:hover {
+  background: #8a1515;
+}
+
+.btn--sm {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.82rem;
+}
+
+/* ======================================
+   My reservations (matches course styles.css)
+====================================== */
+.reservation-hero {
+  background-image: var(--hero-reservations);
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.reservation-hero-text {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+  overflow: auto;
+}
+
+.reservation-hero-text h1 {
+  font-family: var(--font-serif);
+  font-weight: bold;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.reservation-hero-text > p {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.reservation-hero-text .reservations-table {
+  width: 100%;
+}
+
+.lookup-hero {
+  background-image: var(--hero-lookup);
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+}
+
+.lookup-hero-text {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+  overflow: auto;
+}
+
+.lookup-hero-text h1,
+.lookup-hero-text h2 {
+  font-family: var(--font-serif);
+  font-weight: bold;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.lookup-hero-text p {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.lookup-result {
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem);
+  background: #f8f9fa;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.lookup-result .lookup-hero-text {
+  background: transparent;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reservation-empty {
+  margin-top: 1rem;
+  color: #555;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  margin-top: 1.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.reservations-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: var(--white);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.reservations-table th,
+.reservations-table td {
+  border: 1px solid #ddd;
+  padding: 0.55rem 0.65rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.reservations-table thead {
+  background: #e8eaed;
+}
+
+.reservations-table th {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lookup-form label {
+  display: block;
+  font-weight: 700;
+  font-size: 0.88rem;
+  margin-top: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.lookup-form label:first-of-type {
+  margin-top: 0;
+}
+
+.lookup-form input[type="text"],
+.lookup-form input[type="email"] {
+  width: 100%;
+  max-width: 24rem;
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.lookup-form__submit {
+  margin-top: 1.25rem;
+  background-color: #007bff;
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+}
+
+.lookup-form__submit:hover {
+  background-color: #0062cc;
+}
+
+.lookup-result h3 {
+  font-family: var(--font-serif);
+  margin-bottom: 1rem;
+}
+
+/* ======================================
+   Course stylesheet: .button aliases (PHP pages use class="button")
+====================================== */
+.button {
+  display: inline-block;
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-weight: bold;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.button.cancel {
+  background-color: #f44336;
+}
+
+.button.lookup {
+  background-color: #007bff;
+}
+
+/* Login page */
+.login-section {
+  min-height: calc(100vh - 5.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: var(--hero-lookup);
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+}
+
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-container h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.login-container .form-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.login-container .form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.login-container .form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.login-container .error {
+  color: #c62828;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Registration */
+.register-section {
+  min-height: calc(100vh - 5.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: var(--hero-lookup);
+  background-size: cover;
+  background-position: center;
+  padding: 50px 20px;
+}
+
+.register-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 30px;
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.register-container h1 {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.register-container .form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.register-container .form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.register-container .form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+/* Contact — social icons */
+.social-icons img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin: 10px;
+  cursor: pointer;
+}
+
+/* Reservation summary — action row */
+.reservation-actions {
+  text-align: center;
+  margin-top: 20px;
+}
+
+/* ======================================
+   Responsive — stack header on narrow screens
+====================================== */
+@media (max-width: 900px) {
+  .site-header {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav--left,
+  .nav--right {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .brand {
+    order: -1;
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-item,
+  .attraction-item {
+    grid-template-columns: 1fr;
+  }
+
+  .room-type {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .nav__link {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .nav__link:hover {
+    transform: scale(1.04);
+  }
+
+  .nav__link--active:hover {
+    transform: scale(1.04);
+  }
+
+  .btn--outline {
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .site-header .btn--outline:hover {
+    transform: scale(1.03);
+  }
+
+  .brand:hover {
+    transform: scale(1.04);
+  }
+
+  .nav--right {
+    flex-direction: column;
+  }
+}

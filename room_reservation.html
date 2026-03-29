@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lodging - Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      function validateDates() {
+        var checkInDate = document.getElementsByName("start_date")[0].value;
+        var checkOutDate = document.getElementsByName("end_date")[0].value;
+        if (!checkInDate || !checkOutDate) {
+          return true;
+        }
+
+        var checkIn = new Date(checkInDate + "T12:00:00");
+        var checkOut = new Date(checkOutDate + "T12:00:00");
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var checkInDay = new Date(checkInDate + "T12:00:00");
+        checkInDay.setHours(0, 0, 0, 0);
+
+        if (checkInDay <= today) {
+          alert("Check-in date must be in the future.");
+          return false;
+        }
+
+        if (checkOut <= checkIn) {
+          alert("Check-out date must be at least one day after check-in.");
+          return false;
+        }
+
+        return true;
+      }
+
+      window.onload = function () {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+        var startDateInput = document.getElementsByName("start_date")[0];
+        var endDateInput = document.getElementsByName("end_date")[0];
+
+        startDateInput.setAttribute("min", tomorrowStr);
+        endDateInput.setAttribute("min", tomorrowStr);
+
+        startDateInput.addEventListener("change", function () {
+          var selectedStart = new Date(this.value + "T12:00:00");
+          selectedStart.setDate(selectedStart.getDate() + 1);
+          var minEndDate = selectedStart.toISOString().split("T")[0];
+          endDateInput.setAttribute("min", minEndDate);
+          if (endDateInput.value && new Date(endDateInput.value) < selectedStart) {
+            endDateInput.value = "";
+          }
+        });
+
+        document.getElementById("booking-form").addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (!validateDates()) {
+            return;
+          }
+          var form = e.target;
+          var sel = form.room_id;
+          var data = {
+            start_date: form.start_date.value,
+            end_date: form.end_date.value,
+            room_id: sel.value,
+            room_label: sel.options[sel.selectedIndex].text,
+            notes: form.notes.value.trim(),
+          };
+          sessionStorage.setItem("loreine_reservation", JSON.stringify(data));
+          window.location.href = "reservation_summary.html";
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About Us</a>
+        <a href="attractions.html" class="nav__link">Attractions</a>
+      </nav>
+
+      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            class="brand__svg"
+            viewBox="0 0 24 24"
+            width="42"
+            height="42"
+            role="img"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <title>Loreine's Bay Resort Lodge</title>
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="room_reservation.html" class="nav__link nav__link--active">Lodging</a>
+        <a href="my_reservations.html" class="nav__link">My Reservations</a>
+        <a href="contact.html" class="nav__link">Contact Us</a>
+        <a href="login.html" class="btn btn--outline">Login/Register</a>
+      </nav>
+    </header>
+
+    <section class="hero lodging-hero" aria-label="Book your stay">
+      <div class="lodging-hero__panel">
+        <h1 class="lodging-hero__title">Book Your Stay</h1>
+        <p class="lodging-hero__intro">Welcome, Guest! Please fill out the form to book your stay.</p>
+
+        <form id="booking-form" class="booking-form" method="post" action="#">
+          <label for="start_date">Check-in Date:</label>
+          <input type="date" id="start_date" name="start_date" required />
+
+          <label for="end_date">Check-out Date:</label>
+          <input type="date" id="end_date" name="end_date" required />
+
+          <label for="room_id">Room Type:</label>
+          <select id="room_id" name="room_id" required>
+            <option value="1">Standard - Single King (4 available)</option>
+            <option value="2">Standard - Single Queen (3 available)</option>
+            <option value="3">Standard - Double Queen (2 available)</option>
+            <option value="4">Deluxe - Single King (3 available)</option>
+            <option value="5">Deluxe - Single Queen (2 available)</option>
+            <option value="6">Deluxe - Double Queen (2 available)</option>
+            <option value="7">Suite - 1 Room (2 available)</option>
+            <option value="8">Suite - 2 Room (1 available)</option>
+          </select>
+
+          <label for="notes">Special Requests/Notes:</label>
+          <textarea id="notes" name="notes" rows="4" cols="50" placeholder="Optional"></textarea>
+
+          <button type="submit" class="btn btn--primary booking-form__submit">Book Now</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="room-types" aria-labelledby="room-types-heading">
+      <h2 id="room-types-heading">Available Room Types</h2>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/reservation-2.jpg?raw=true"
+            alt="Standard - Single King"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Standard - Single King</h3>
+          <p>Available rooms: 4</p>
+          <p>Comfortable standard room with a single king bed, ideal for solo travelers or couples.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/single-queen.jpg?raw=true"
+            alt="Standard - Single Queen"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Standard - Single Queen</h3>
+          <p>Available rooms: 3</p>
+          <p>Cozy standard room featuring a queen bed and essential amenities.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/double-queen.jpg?raw=true"
+            alt="Standard - Double Queen"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Standard - Double Queen</h3>
+          <p>Available rooms: 2</p>
+          <p>Spacious standard room with two queen beds, perfect for families or groups.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/reservation-1.jpg?raw=true"
+            alt="Deluxe - Single King"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Deluxe - Single King</h3>
+          <p>Available rooms: 3</p>
+          <p>Upgraded deluxe room with a king bed and enhanced furnishings.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/single-deluxe-queen.jpg?raw=true"
+            alt="Deluxe - Single Queen"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Deluxe - Single Queen</h3>
+          <p>Available rooms: 2</p>
+          <p>Deluxe queen room with premium touches and bay-inspired décor.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/deluxe-2-Queen.jpg?raw=true"
+            alt="Deluxe - Double Queen"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Deluxe - Double Queen</h3>
+          <p>Available rooms: 2</p>
+          <p>Generous deluxe layout with two queen beds and extra living space.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/suite.jpg?raw=true"
+            alt="Suite - 1 Room"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Suite - 1 Room</h3>
+          <p>Available rooms: 2</p>
+          <p>One-room suite with separated seating area and upgraded amenities.</p>
+        </div>
+      </div>
+
+      <div class="room-type">
+        <div class="image-container">
+          <img
+            src="https://github.com/BRHackett/Moffat-Bay/blob/main/src/images/2-suite.jpg?raw=true"
+            alt="Suite - 2 Room"
+            width="800"
+            height="500"
+            loading="lazy"
+          />
+        </div>
+        <div class="description">
+          <h3>Suite - 2 Room</h3>
+          <p>Available rooms: 1</p>
+          <p>Two-room suite for extra privacy—ideal for extended stays.</p>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

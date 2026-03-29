@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About Us</a>
+        <a href="attractions.html" class="nav__link">Attractions</a>
+      </nav>
+
+      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            class="brand__svg"
+            viewBox="0 0 24 24"
+            width="42"
+            height="42"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="room_reservation.html" class="nav__link">Lodging</a>
+        <a href="my_reservations.html" class="nav__link">My Reservations</a>
+        <a href="contact.html" class="nav__link">Contact Us</a>
+        <a href="login.html" class="nav__link nav__link--active">Login/Register</a>
+      </nav>
+    </header>
+
+    <section class="login-section" aria-labelledby="login-heading">
+      <div class="login-container">
+        <h1 id="login-heading">Login</h1>
+        <p class="summary-card__note" style="margin-bottom: 1rem">
+          Static preview — your <code>login.php</code> checks the <code>Login</code> and <code>User</code> tables and sets <code>$_SESSION</code>.
+        </p>
+        <p id="login-error" class="error" role="alert" hidden></p>
+
+        <form id="login-form" action="#" method="post">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required autocomplete="username" />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="current-password" />
+          </div>
+          <button type="submit" class="button">Login</button>
+          <p style="margin-top: 1.25rem; font-size: 0.95rem">
+            Don't have an account? <a href="register.html">Register here</a>
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        var form = document.getElementById("login-form");
+        var err = document.getElementById("login-error");
+        // Demo only: username "demo" + password "demo" mimics success → My Reservations (like PHP redirect).
+        var DEMO_USER = "demo";
+        var DEMO_PASS = "demo";
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          err.hidden = true;
+          var u = document.getElementById("username").value.trim();
+          var p = document.getElementById("password").value;
+
+          if (u === DEMO_USER && p === DEMO_PASS) {
+            sessionStorage.setItem("loreine_demo_login", "1");
+            sessionStorage.setItem("loreine_demo_username", u);
+            window.location.href = "my_reservations.html";
+            return;
+          }
+          if (u !== DEMO_USER) {
+            err.textContent = "User not found.";
+          } else {
+            err.textContent = "Invalid password.";
+          }
+          err.hidden = false;
+        });
+      })();
+    </script>
+  </body>
+</html>

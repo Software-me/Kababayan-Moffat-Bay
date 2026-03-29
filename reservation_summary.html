@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservation Summary - Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About Us</a>
+        <a href="attractions.html" class="nav__link">Attractions</a>
+      </nav>
+
+      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            class="brand__svg"
+            viewBox="0 0 24 24"
+            width="42"
+            height="42"
+            role="img"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <title>Loreine's Bay Resort Lodge</title>
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="room_reservation.html" class="nav__link nav__link--active">Lodging</a>
+        <a href="my_reservations.html" class="nav__link">My Reservations</a>
+        <a href="contact.html" class="nav__link">Contact Us</a>
+        <a href="login.html" class="btn btn--outline">Login/Register</a>
+      </nav>
+    </header>
+
+    <main class="summary-main">
+      <div class="summary-card">
+        <h1 class="summary-card__title">Reservation summary</h1>
+        <p id="summary-empty" class="summary-card__empty" hidden>No reservation data found. Start from the lodging page.</p>
+        <dl id="summary-details" class="summary-details" hidden></dl>
+        <p class="summary-card__note">
+          Preview page for the static site. The PHP app uses <code>room_reservation.php</code> → <code>reservation_summary.php</code> with sessions and MySQL.
+        </p>
+        <a href="room_reservation.html" class="btn btn--primary">Back to booking</a>
+        <a href="index.html" class="btn btn--outline summary-card__home">Home</a>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        var raw = sessionStorage.getItem("loreine_reservation");
+        var emptyEl = document.getElementById("summary-empty");
+        var detailsEl = document.getElementById("summary-details");
+        if (!raw) {
+          emptyEl.hidden = false;
+          return;
+        }
+        var data;
+        try {
+          data = JSON.parse(raw);
+        } catch (e) {
+          emptyEl.hidden = false;
+          return;
+        }
+        emptyEl.hidden = true;
+        detailsEl.hidden = false;
+        var rows = [
+          ["Check-in", data.start_date],
+          ["Check-out", data.end_date],
+          ["Room", data.room_label || data.room_id],
+        ];
+        if (data.notes) {
+          rows.push(["Notes", data.notes]);
+        }
+        detailsEl.textContent = "";
+        rows.forEach(function (pair) {
+          var dt = document.createElement("dt");
+          dt.textContent = pair[0];
+          var dd = document.createElement("dd");
+          dd.textContent = String(pair[1]);
+          detailsEl.appendChild(dt);
+          detailsEl.appendChild(dd);
+        });
+      })();
+    </script>
+  </body>
+</html>
