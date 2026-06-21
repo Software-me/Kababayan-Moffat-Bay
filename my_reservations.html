@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Reservations - Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="about.html" class="nav__link">About Us</a>
+        <a href="attractions.html" class="nav__link">Attractions</a>
+      </nav>
+
+      <a href="index.html" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg
+            class="brand__svg"
+            viewBox="0 0 24 24"
+            width="42"
+            height="42"
+            role="img"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <title>Loreine's Bay Resort Lodge</title>
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="room_reservation.html" class="nav__link">Lodging</a>
+        <a href="my_reservations.html" class="nav__link nav__link--active">My Reservations</a>
+        <a href="contact.html" class="nav__link">Contact Us</a>
+        <a href="login.html" class="btn btn--outline">Login/Register</a>
+      </nav>
+    </header>
+
+    <section class="reservation-hero" aria-labelledby="res-heading">
+      <div class="reservation-hero-text">
+        <h1 id="res-heading"><span id="guest-name">Guest</span>'s Reservations</h1>
+        <div class="table-scroll" role="region" aria-label="Your reservations" tabindex="0">
+          <table class="reservations-table">
+            <thead>
+              <tr>
+                <th>Reservation ID</th>
+                <th>Room Type</th>
+                <th>Room Description</th>
+                <th>Check-in Date</th>
+                <th>Check-out Date</th>
+                <th>Status</th>
+                <th>Payment Status</th>
+                <th>Notes</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="reservations-tbody">
+              <tr data-reservation-id="10042">
+                <td>10042</td>
+                <td>Deluxe - Single King</td>
+                <td>Upgraded deluxe room with a king bed and enhanced furnishings.</td>
+                <td>2026-05-10</td>
+                <td>2026-05-14</td>
+                <td>Confirmed</td>
+                <td>Paid</td>
+                <td>Late arrival after 9pm</td>
+                <td>
+                  <form class="cancel-reservation-form" method="post" action="#">
+                    <input type="hidden" name="reservation_id" value="10042" />
+                    <button type="submit" name="cancel_reservation" class="btn btn--danger btn--sm">Cancel</button>
+                  </form>
+                </td>
+              </tr>
+              <tr data-reservation-id="10058">
+                <td>10058</td>
+                <td>Standard - Double Queen</td>
+                <td>Spacious standard room with two queen beds.</td>
+                <td>2026-06-01</td>
+                <td>2026-06-04</td>
+                <td>Confirmed</td>
+                <td>Pending</td>
+                <td>—</td>
+                <td>
+                  <form class="cancel-reservation-form" method="post" action="#">
+                    <input type="hidden" name="reservation_id" value="10058" />
+                    <button type="submit" name="cancel_reservation" class="btn btn--danger btn--sm">Cancel</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p id="no-reservations-msg" class="reservation-empty" hidden>No reservations found.</p>
+      </div>
+    </section>
+
+    <section class="lookup-hero" aria-labelledby="lookup-heading">
+      <div class="lookup-hero-text">
+        <h2 id="lookup-heading">Can't see your reservation?</h2>
+        <p>Look it up by using your email or Reservation number.</p>
+        <form id="lookup-form" class="lookup-form" method="post" action="#">
+          <label for="reservation_ID">Reservation ID:</label>
+          <input type="text" name="reservation_ID" id="reservation_ID" autocomplete="off" />
+
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" autocomplete="email" />
+
+          <button type="submit" class="btn btn--primary lookup-form__submit">Find Reservation</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="lookup-result" class="lookup-result" hidden aria-live="polite">
+      <div class="lookup-hero-text">
+        <h3 id="lookup-result-title">Search Results:</h3>
+        <div id="lookup-result-content"></div>
+      </div>
+    </section>
+
+    <script>
+      (function () {
+        document.querySelectorAll(".cancel-reservation-form").forEach(function (form) {
+          form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (!confirm("Cancel this reservation?")) {
+              return;
+            }
+            var row = form.closest("tr");
+            if (row) {
+              row.remove();
+            }
+            var tbody = document.getElementById("reservations-tbody");
+            var empty = document.getElementById("no-reservations-msg");
+            if (tbody && tbody.rows.length === 0) {
+              empty.hidden = false;
+              document.querySelector(".table-scroll").hidden = true;
+            }
+          });
+        });
+
+        var mockLookup = [
+          {
+            reservation_id: "10042",
+            first_name: "Alex",
+            last_name: "Rivera",
+            email: "alex.rivera@example.com",
+            room_type: "Deluxe - Single King",
+            description: "Upgraded deluxe room with a king bed and enhanced furnishings.",
+            start_date: "2026-05-10",
+            end_date: "2026-05-14",
+            status: "Confirmed",
+          },
+        ];
+
+        document.getElementById("lookup-form").addEventListener("submit", function (e) {
+          e.preventDefault();
+          var id = document.getElementById("reservation_ID").value.trim();
+          var email = document.getElementById("email").value.trim().toLowerCase();
+          var section = document.getElementById("lookup-result");
+          var content = document.getElementById("lookup-result-content");
+          var matches = mockLookup.filter(function (r) {
+            var idMatch = id && r.reservation_id === id;
+            var emailMatch = email && r.email.toLowerCase() === email;
+            return idMatch || emailMatch;
+          });
+
+          section.hidden = false;
+          if (matches.length === 0) {
+            content.innerHTML = "<p>No reservation found with the given information.</p>";
+            return;
+          }
+
+          var thead =
+            "<thead><tr><th>Reservation ID</th><th>Name</th><th>Email</th><th>Room Type</th><th>Room Description</th><th>Check-in Date</th><th>Check-out Date</th><th>Status</th></tr></thead>";
+          var rows = matches
+            .map(function (r) {
+              return (
+                "<tr><td>" +
+                escapeHtml(r.reservation_id) +
+                "</td><td>" +
+                escapeHtml(r.first_name + " " + r.last_name) +
+                "</td><td>" +
+                escapeHtml(r.email) +
+                "</td><td>" +
+                escapeHtml(r.room_type) +
+                "</td><td>" +
+                escapeHtml(r.description) +
+                "</td><td>" +
+                escapeHtml(r.start_date) +
+                "</td><td>" +
+                escapeHtml(r.end_date) +
+                "</td><td>" +
+                escapeHtml(r.status) +
+                "</td></tr>"
+              );
+            })
+            .join("");
+          content.innerHTML = '<div class="table-scroll"><table class="reservations-table">' + thead + "<tbody>" + rows + "</tbody></table></div>";
+
+          section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+
+        function escapeHtml(s) {
+          var d = document.createElement("div");
+          d.textContent = s;
+          return d.innerHTML;
+        }
+      })();
+    </script>
+  </body>
+</html>

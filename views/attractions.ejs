@@ -1,0 +1,37 @@
+<%- include('partials/header', { title: 'Attractions' }) %>
+
+    <section class="hero about-hero" aria-label="Attractions intro">
+      <div class="about-hero__inner">
+        <h1 class="about-hero__title">Discover the Attractions at Loreine's Bay Resort Lodge</h1>
+        <p class="about-hero__subtitle">
+          From thrilling outdoor adventures to serene relaxation, we have something for everyone.
+        </p>
+      </div>
+    </section>
+
+    <div class="attractions-list">
+      <% const attractions = [
+        { title: 'Hiking Adventures', img: 'hike-5.jpg', desc: 'Explore breathtaking trails around the bay with scenic landscapes and wildlife. Perfect for nature lovers and adventurers!' },
+        { title: 'Kayaking', img: 'kayak-2.jpg', desc: 'Paddle through crystal-clear waters, taking in the beauty of the bay. Kayaking offers a peaceful way to explore the surroundings.' },
+        { title: 'Scuba Diving', img: 'scuba.jpg', desc: 'Discover vibrant marine life beneath the waves. Whether you\'re a beginner or expert, our scuba tours offer an unforgettable experience.' },
+        { title: 'Whale Watching', img: 'whale-3.jpg', desc: 'Witness majestic whales breaching the water. Our tours bring you up close to these magnificent creatures in their natural habitat.' },
+        { title: 'Fine Dining', img: 'dining.jpg', desc: 'Enjoy gourmet meals made with fresh, locally sourced ingredients. Dine with a stunning view of the bay to complete your experience.' },
+        { title: 'Indoor Pool', img: 'indoor-pool.jpg', desc: 'Take a relaxing dip in our luxurious heated indoor pool. It\'s perfect for a refreshing swim, regardless of the weather outside.' },
+        { title: 'Marina', img: 'marina.jpg', desc: 'Dock your boat at our fully equipped marina or rent one for a day of adventure. The marina offers easy access to the open water.' },
+        { title: 'Family Playground', img: 'playground.jpg', desc: 'Let the kids run wild in our family-friendly playground. Plenty of activities to keep them entertained while you relax nearby.' },
+        { title: 'Spa & Wellness', img: 'spa.jpg', desc: 'Relax and rejuvenate in our spa with a range of treatments to help you unwind and feel refreshed during your stay.' },
+      ]; %>
+      <% attractions.forEach(function(a) { %>
+      <div class="attraction-item">
+        <div class="image-container">
+          <img src="https://github.com/BRHackett/Moffat-Bay/raw/main/src/images/<%= a.img %>" alt="<%= a.title %>" width="800" height="500" loading="lazy" />
+        </div>
+        <div class="description">
+          <h3><%= a.title %></h3>
+          <p><%= a.desc %></p>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+
+<%- include('partials/footer') %>

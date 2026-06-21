@@ -1,0 +1,38 @@
+<%- include('partials/header', { title: 'Update Room' }) %>
+
+    <main class="summary-main">
+      <div class="summary-card" style="max-width: 32rem">
+        <h1 class="summary-card__title">Update Room Information</h1>
+        <p class="summary-card__note" style="margin-bottom: 1.25rem">
+          Admin: update inventory counts stored in PostgreSQL.
+        </p>
+
+        <% if (success) { %>
+          <p class="flash flash--success" role="status"><%= success %></p>
+        <% } %>
+        <% if (error) { %>
+          <p class="error" role="alert"><%= error %></p>
+        <% } %>
+
+        <form class="booking-form" method="post" action="/update_room">
+          <label for="room_id">Room Type:</label>
+          <select id="room_id" name="room_id" required onchange="window.location.href='/update_room?room_id='+this.value">
+            <% rooms.forEach(function(room) { %>
+              <option value="<%= room.room_id %>" <%= selectedRoom && selectedRoom.room_id === room.room_id ? 'selected' : '' %>>
+                <%= room.room_type %>
+              </option>
+            <% }); %>
+          </select>
+
+          <label for="total_rooms">Total Rooms:</label>
+          <input type="number" id="total_rooms" name="total_rooms" min="0" value="<%= selectedRoom ? selectedRoom.total_rooms : '' %>" required />
+
+          <label for="available_rooms">Available Rooms:</label>
+          <input type="number" id="available_rooms" name="available_rooms" min="0" value="<%= selectedRoom ? selectedRoom.available_rooms : '' %>" required />
+
+          <button type="submit" class="btn btn--primary" style="margin-top: 1.25rem">Update Room</button>
+        </form>
+      </div>
+    </main>
+
+<%- include('partials/footer') %>

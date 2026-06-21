@@ -1,0 +1,61 @@
+<%- include('partials/header', { title: 'Look Up Reservation' }) %>
+
+    <section class="lookup-hero" aria-labelledby="lookup-heading">
+      <div class="lookup-hero-text">
+        <h1 id="lookup-heading">Look Up Your Reservation</h1>
+        <p>Enter your reservation ID and/or the email used when booking.</p>
+        <% if (lookupError) { %>
+          <p class="error" role="alert"><%= lookupError %></p>
+        <% } %>
+        <form class="lookup-form" method="post" action="/lookup">
+          <label for="reservation_ID">Reservation ID:</label>
+          <input type="text" name="reservation_ID" id="reservation_ID" autocomplete="off" />
+
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" autocomplete="email" />
+
+          <button type="submit" class="btn btn--primary lookup-form__submit">Find Reservation</button>
+        </form>
+        <p style="margin-top: 1.5rem">
+          Have an account? <a href="/login">Log in</a> to see all your reservations.
+        </p>
+      </div>
+    </section>
+
+    <% if (lookupResults && lookupResults.length > 0) { %>
+    <section class="lookup-result" aria-live="polite">
+      <div class="lookup-hero-text">
+        <h3>Search Results:</h3>
+        <div class="table-scroll">
+          <table class="reservations-table">
+            <thead>
+              <tr>
+                <th>Reservation ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Room Type</th>
+                <th>Check-in</th>
+                <th>Check-out</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% lookupResults.forEach(function(r) { %>
+              <tr>
+                <td><%= r.reservation_id %></td>
+                <td><%= r.first_name %> <%= r.last_name %></td>
+                <td><%= r.email %></td>
+                <td><%= r.room_type %></td>
+                <td><%= formatDate(r.start_date) %></td>
+                <td><%= formatDate(r.end_date) %></td>
+                <td><%= r.status %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <% } %>
+
+<%- include('partials/footer') %>

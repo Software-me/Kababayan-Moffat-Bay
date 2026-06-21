@@ -1,0 +1,14 @@
+# Alternative deploy target — Railway (https://railway.app)
+# 1. New Project → Deploy from GitHub repo
+# 2. Add PostgreSQL plugin → link DATABASE_URL to the web service
+# 3. Set SESSION_SECRET and NODE_ENV=production
+# 4. Set start command: npm run start:production
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm install && npm run db:init"
+
+[deploy]
+startCommand = "npm start"
+healthcheckPath = "/"
+restartPolicyType = "ON_FAILURE"

@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: 'Reservation Summary' }) %>
+
+    <main class="summary-main">
+      <div class="summary-card">
+        <h1 class="summary-card__title">Reservation summary</h1>
+
+        <% if (!reservation) { %>
+          <p class="summary-card__empty">No reservation data found. Start from the lodging page.</p>
+          <a href="/room_reservation" class="btn btn--primary">Back to booking</a>
+        <% } else { %>
+          <dl class="summary-details">
+            <dt>Reservation ID</dt>
+            <dd><%= reservation.reservation_id %></dd>
+            <dt>Check-in</dt>
+            <dd><%= formatDate(reservation.start_date) %></dd>
+            <dt>Check-out</dt>
+            <dd><%= formatDate(reservation.end_date) %></dd>
+            <dt>Room</dt>
+            <dd><%= reservation.room_type %></dd>
+            <dt>Status</dt>
+            <dd><%= reservation.status %></dd>
+            <dt>Payment</dt>
+            <dd><%= reservation.payment_status %></dd>
+            <% if (reservation.notes) { %>
+              <dt>Notes</dt>
+              <dd><%= reservation.notes %></dd>
+            <% } %>
+          </dl>
+          <p class="summary-card__note">Your reservation has been saved to the database.</p>
+          <% if (user) { %>
+            <a href="/my_reservations" class="btn btn--primary">My Reservations</a>
+          <% } else { %>
+            <a href="/lookup" class="btn btn--primary">Look up reservation</a>
+          <% } %>
+          <a href="/room_reservation" class="btn btn--outline summary-card__home">Book another stay</a>
+        <% } %>
+        <a href="/" class="btn btn--outline summary-card__home">Home</a>
+      </div>
+    </main>
+
+<%- include('partials/footer') %>

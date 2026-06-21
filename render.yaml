@@ -1,0 +1,27 @@
+# Render Blueprint — Loreine's Bay Resort Lodge
+# Deploy: https://dashboard.render.com/select-repo?type=blueprint
+# Connect this GitHub repo and Render provisions the web service + PostgreSQL automatically.
+
+databases:
+  - name: loreine-bay-db
+    plan: free
+    databaseName: loreine_bay
+    user: loreine
+
+services:
+  - type: web
+    name: loreines-bay-resort-lodge
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run db:init
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: loreine-bay-db
+          property: connectionString

@@ -1,0 +1,121 @@
+<%- include('partials/header', { title: 'Lodging' }) %>
+
+    <script>
+      function validateDates() {
+        var checkInDate = document.getElementsByName("start_date")[0].value;
+        var checkOutDate = document.getElementsByName("end_date")[0].value;
+        if (!checkInDate || !checkOutDate) return true;
+
+        var checkIn = new Date(checkInDate + "T12:00:00");
+        var checkOut = new Date(checkOutDate + "T12:00:00");
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var checkInDay = new Date(checkInDate + "T12:00:00");
+        checkInDay.setHours(0, 0, 0, 0);
+
+        if (checkInDay <= today) {
+          alert("Check-in date must be in the future.");
+          return false;
+        }
+        if (checkOut <= checkIn) {
+          alert("Check-out date must be at least one day after check-in.");
+          return false;
+        }
+        return true;
+      }
+
+      window.onload = function () {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var tomorrowStr = tomorrow.toISOString().split("T")[0];
+
+        var startDateInput = document.getElementsByName("start_date")[0];
+        var endDateInput = document.getElementsByName("end_date")[0];
+
+        startDateInput.setAttribute("min", tomorrowStr);
+        endDateInput.setAttribute("min", tomorrowStr);
+
+        startDateInput.addEventListener("change", function () {
+          var selectedStart = new Date(this.value + "T12:00:00");
+          selectedStart.setDate(selectedStart.getDate() + 1);
+          var minEndDate = selectedStart.toISOString().split("T")[0];
+          endDateInput.setAttribute("min", minEndDate);
+          if (endDateInput.value && new Date(endDateInput.value) < selectedStart) {
+            endDateInput.value = "";
+          }
+        });
+
+        document.getElementById("booking-form").addEventListener("submit", function (e) {
+          if (!validateDates()) e.preventDefault();
+        });
+      };
+    </script>
+
+    <section class="hero lodging-hero" aria-label="Book your stay">
+      <div class="lodging-hero__panel">
+        <h1 class="lodging-hero__title">Book Your Stay</h1>
+        <p class="lodging-hero__intro">
+          <% if (user) { %>
+            Welcome, <%= user.firstName %>! Please fill out the form to book your stay.
+          <% } else { %>
+            Welcome, Guest! Log in or enter your details below to book.
+          <% } %>
+        </p>
+
+        <% if (error) { %>
+          <p class="error" role="alert"><%= error %></p>
+        <% } %>
+
+        <form id="booking-form" class="booking-form" method="post" action="/room_reservation">
+          <label for="start_date">Check-in Date:</label>
+          <input type="date" id="start_date" name="start_date" value="<%= values.start_date || '' %>" required />
+
+          <label for="end_date">Check-out Date:</label>
+          <input type="date" id="end_date" name="end_date" value="<%= values.end_date || '' %>" required />
+
+          <label for="room_id">Room Type:</label>
+          <select id="room_id" name="room_id" required>
+            <% rooms.forEach(function(room) { %>
+              <option value="<%= room.room_id %>" <%= String(values.room_id) === String(room.room_id) ? 'selected' : '' %>>
+                <%= room.room_type %> (<%= room.available_rooms %> available)
+              </option>
+            <% }); %>
+          </select>
+
+          <% if (!user) { %>
+            <label for="guest_first_name">First name:</label>
+            <input type="text" id="guest_first_name" name="guest_first_name" value="<%= values.guest_first_name || '' %>" required />
+
+            <label for="guest_last_name">Last name:</label>
+            <input type="text" id="guest_last_name" name="guest_last_name" value="<%= values.guest_last_name || '' %>" required />
+
+            <label for="guest_email">Email:</label>
+            <input type="email" id="guest_email" name="guest_email" value="<%= values.guest_email || '' %>" required />
+          <% } %>
+
+          <label for="notes">Special Requests/Notes:</label>
+          <textarea id="notes" name="notes" rows="4" cols="50" placeholder="Optional"><%= values.notes || '' %></textarea>
+
+          <button type="submit" class="btn btn--primary booking-form__submit">Book Now</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="room-types" aria-labelledby="room-types-heading">
+      <h2 id="room-types-heading">Available Room Types</h2>
+
+      <% rooms.forEach(function(room) { %>
+      <div class="room-type">
+        <div class="image-container">
+          <img src="<%= room.image_url %>" alt="<%= room.room_type %>" width="800" height="500" loading="lazy" />
+        </div>
+        <div class="description">
+          <h3><%= room.room_type %></h3>
+          <p>Available rooms: <%= room.available_rooms %></p>
+          <p><%= room.description %></p>
+        </div>
+      </div>
+      <% }); %>
+    </section>
+
+<%- include('partials/footer') %>

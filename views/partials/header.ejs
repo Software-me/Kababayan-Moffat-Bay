@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Loreine's Bay Resort Lodge</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="nav nav--left" aria-label="Section navigation">
+        <a href="/" class="nav__link<%= activePage === 'home' ? ' nav__link--active' : '' %>">Home</a>
+        <a href="/about" class="nav__link<%= activePage === 'about' ? ' nav__link--active' : '' %>">About Us</a>
+        <a href="/attractions" class="nav__link<%= activePage === 'attractions' ? ' nav__link--active' : '' %>">Attractions</a>
+      </nav>
+
+      <a href="/" class="brand" aria-label="Loreine's Bay Resort Lodge home">
+        <span class="brand__mark" aria-hidden="true">
+          <svg class="brand__svg" viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="5" r="3" />
+            <path d="M12 22V8M5 12H2a10 10 0 0 0 20 0h-3" />
+          </svg>
+        </span>
+        <span class="brand__name">Loreine's Bay Resort Lodge</span>
+      </a>
+
+      <nav class="nav nav--right" aria-label="Account navigation">
+        <a href="/room_reservation" class="nav__link<%= activePage === 'lodging' ? ' nav__link--active' : '' %>">Lodging</a>
+        <a href="/my_reservations" class="nav__link<%= activePage === 'reservations' ? ' nav__link--active' : '' %>">My Reservations</a>
+        <a href="/contact" class="nav__link<%= activePage === 'contact' ? ' nav__link--active' : '' %>">Contact Us</a>
+        <% if (user) { %>
+          <% if (user.isAdmin) { %>
+            <a href="/update_room" class="nav__link<%= activePage === 'admin' ? ' nav__link--active' : '' %>">Manage Rooms</a>
+          <% } %>
+          <span class="nav__link" style="font-weight:400">Hi, <%= user.firstName %></span>
+          <a href="/logout" class="btn btn--outline">Logout</a>
+        <% } else { %>
+          <a href="/login" class="btn btn--outline<%= activePage === 'login' ? ' nav__link--active' : '' %>">Login/Register</a>
+        <% } %>
+      </nav>
+    </header>
+
+    <% if (flash) { %>
+      <div class="flash flash--<%= flash.type %>" role="status"><%= flash.message %></div>
+    <% } %>

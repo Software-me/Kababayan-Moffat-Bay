@@ -1,0 +1,107 @@
+<%- include('partials/header', { title: 'My Reservations' }) %>
+
+    <section class="reservation-hero" aria-labelledby="res-heading">
+      <div class="reservation-hero-text">
+        <h1 id="res-heading"><%= user.firstName %>'s Reservations</h1>
+        <% if (reservations.length === 0) { %>
+          <p class="reservation-empty">No reservations found.</p>
+        <% } else { %>
+          <div class="table-scroll" role="region" aria-label="Your reservations" tabindex="0">
+            <table class="reservations-table">
+              <thead>
+                <tr>
+                  <th>Reservation ID</th>
+                  <th>Room Type</th>
+                  <th>Room Description</th>
+                  <th>Check-in Date</th>
+                  <th>Check-out Date</th>
+                  <th>Status</th>
+                  <th>Payment Status</th>
+                  <th>Notes</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% reservations.forEach(function(r) { %>
+                <tr>
+                  <td><%= r.reservation_id %></td>
+                  <td><%= r.room_type %></td>
+                  <td><%= r.room_description %></td>
+                  <td><%= formatDate(r.start_date) %></td>
+                  <td><%= formatDate(r.end_date) %></td>
+                  <td><%= r.status %></td>
+                  <td><%= r.payment_status %></td>
+                  <td><%= r.notes || '—' %></td>
+                  <td>
+                    <form method="post" action="/my_reservations/cancel" onsubmit="return confirm('Cancel this reservation?');">
+                      <input type="hidden" name="reservation_id" value="<%= r.reservation_id %>" />
+                      <button type="submit" class="btn btn--danger btn--sm">Cancel</button>
+                    </form>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } %>
+      </div>
+    </section>
+
+    <section class="lookup-hero" aria-labelledby="lookup-heading">
+      <div class="lookup-hero-text">
+        <h2 id="lookup-heading">Can't see your reservation?</h2>
+        <p>Look it up by using your email or Reservation number.</p>
+        <% if (lookupError) { %>
+          <p class="error" role="alert"><%= lookupError %></p>
+        <% } %>
+        <form class="lookup-form" method="post" action="/lookup">
+          <label for="reservation_ID">Reservation ID:</label>
+          <input type="text" name="reservation_ID" id="reservation_ID" autocomplete="off" />
+
+          <label for="email">Email:</label>
+          <input type="email" name="email" id="email" autocomplete="email" />
+
+          <button type="submit" class="btn btn--primary lookup-form__submit">Find Reservation</button>
+        </form>
+      </div>
+    </section>
+
+    <% if (lookupResults && lookupResults.length > 0) { %>
+    <section id="lookup-result" class="lookup-result" aria-live="polite">
+      <div class="lookup-hero-text">
+        <h3>Search Results:</h3>
+        <div class="table-scroll">
+          <table class="reservations-table">
+            <thead>
+              <tr>
+                <th>Reservation ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Room Type</th>
+                <th>Room Description</th>
+                <th>Check-in Date</th>
+                <th>Check-out Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% lookupResults.forEach(function(r) { %>
+              <tr>
+                <td><%= r.reservation_id %></td>
+                <td><%= r.first_name %> <%= r.last_name %></td>
+                <td><%= r.email %></td>
+                <td><%= r.room_type %></td>
+                <td><%= r.room_description %></td>
+                <td><%= formatDate(r.start_date) %></td>
+                <td><%= formatDate(r.end_date) %></td>
+                <td><%= r.status %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <% } %>
+
+<%- include('partials/footer') %>
