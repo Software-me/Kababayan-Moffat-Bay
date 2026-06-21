@@ -106,8 +106,18 @@ After setup, **every push to `main` automatically redeploys** the live site.
 
 Use **`railway.toml`** — create a project on [Railway](https://railway.app), connect GitHub, add a PostgreSQL plugin, and set `DATABASE_URL`, `SESSION_SECRET`, and `NODE_ENV=production`.
 
-## Local development
+## Publish to GitHub + go live on Render
 
+Git is initialized and the first commit is ready. To push and open Render setup:
+
+```powershell
+gh auth login
+powershell -ExecutionPolicy Bypass -File scripts/publish.ps1
+```
+
+The publish script creates the GitHub repo, pushes `main`, and opens the Render Blueprint page. Connect the repo once — after that, **every push to `main` auto-deploys** the live site.
+
+## Local development notes
 
 The original `.html` files in the project root are kept for reference. The live app uses EJS routes (e.g. `/login` instead of `login.html`). Old URLs redirect automatically.
 
