@@ -95,7 +95,7 @@ This repo includes a **`render.yaml`** blueprint that provisions:
 
 1. Push this repo to GitHub (see below if not done yet).
 2. Open [Render Blueprint deploy](https://dashboard.render.com/select-repo?type=blueprint).
-3. Connect your GitHub account and select **Loreines-Bay-Resort-Lodge**.
+3. Connect your GitHub account and select **LoreineResortBayLodge**.
 4. Click **Apply** — Render reads `render.yaml` and creates the database + web service.
 5. Wait for the first deploy to finish (~3–5 minutes).
 6. Open your live URL: `https://loreines-bay-resort-lodge.onrender.com` (or the URL Render assigns).

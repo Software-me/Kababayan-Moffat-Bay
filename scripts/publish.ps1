@@ -10,7 +10,8 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot\..
 
-$repoName = "Loreines-Bay-Resort-Lodge"
+$repoName = "LoreineResortBayLodge"
+$repoOwner = "Software-me"
 
 Write-Host "`n=== Loreine's Bay — GitHub + Render publish ===`n"
 
