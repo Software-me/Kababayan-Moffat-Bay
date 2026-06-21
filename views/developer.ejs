@@ -1,0 +1,132 @@
+<%- include('partials/header', { title: 'Developer' }) %>
+
+    <main class="developer-main">
+      <section class="developer-hero" aria-labelledby="developer-heading">
+        <h1 id="developer-heading">Developer Portfolio</h1>
+        <p class="developer-hero__lead">
+          Technical documentation for this full-stack resort reservation application — built for recruiters and engineers who want to explore the implementation.
+        </p>
+      </section>
+
+      <div class="developer-content">
+        <section class="developer-section" aria-labelledby="overview-heading">
+          <h2 id="overview-heading">Project Overview</h2>
+          <p>
+            <strong>Loreine's Bay Resort Lodge</strong> is a production-style web application that lets guests browse the resort,
+            book rooms, manage reservations, and look up bookings by email or confirmation number. Administrators can update room inventory.
+          </p>
+          <p>
+            The project evolved from a static HTML course prototype into a deployable <strong>Node.js + PostgreSQL</strong> application
+            with session-based authentication, bcrypt password hashing, and overlap-based availability checks for bookings.
+          </p>
+          <ul class="developer-list">
+            <li>Live demo: <a href="https://loreines-bay-resort-lodge.onrender.com" target="_blank" rel="noopener noreferrer">loreines-bay-resort-lodge.onrender.com</a></li>
+            <li>Demo accounts: <code>demo</code> / <code>demo</code> (guest) · <code>admin</code> / <code>admin</code> (staff)</li>
+          </ul>
+        </section>
+
+        <section class="developer-section" aria-labelledby="tech-heading">
+          <h2 id="tech-heading">Technologies Used</h2>
+          <div class="tech-grid">
+            <div class="tech-card">
+              <h3>Frontend</h3>
+              <ul>
+                <li>EJS templates</li>
+                <li>Semantic HTML5</li>
+                <li>Responsive CSS</li>
+                <li>Client-side form validation</li>
+              </ul>
+            </div>
+            <div class="tech-card">
+              <h3>Backend</h3>
+              <ul>
+                <li>Node.js &amp; Express</li>
+                <li>express-session</li>
+                <li>bcrypt password hashing</li>
+                <li>RESTful route handlers</li>
+              </ul>
+            </div>
+            <div class="tech-card">
+              <h3>Database</h3>
+              <ul>
+                <li>PostgreSQL (production)</li>
+                <li>PGlite (local dev)</li>
+                <li>SQL schema &amp; migrations</li>
+                <li>Session store (production)</li>
+              </ul>
+            </div>
+            <div class="tech-card">
+              <h3>DevOps</h3>
+              <ul>
+                <li>Git &amp; GitHub</li>
+                <li>Render Blueprint deploy</li>
+                <li>Docker Compose (optional)</li>
+                <li>Environment-based config</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="developer-section" aria-labelledby="arch-heading">
+          <h2 id="arch-heading">Architecture Diagram</h2>
+          <div class="arch-diagram" role="img" aria-label="Browser connects to Express server, which connects to PostgreSQL database">
+            <div class="arch-row">
+              <div class="arch-box arch-box--client">
+                <span class="arch-box__label">Client</span>
+                <span class="arch-box__detail">Browser (HTML / CSS / EJS)</span>
+              </div>
+            </div>
+            <div class="arch-arrow" aria-hidden="true">↓ HTTP</div>
+            <div class="arch-row">
+              <div class="arch-box arch-box--server">
+                <span class="arch-box__label">Express Server</span>
+                <span class="arch-box__detail">Routes · Auth · Sessions · Business logic</span>
+              </div>
+            </div>
+            <div class="arch-arrow" aria-hidden="true">↓ SQL</div>
+            <div class="arch-row arch-row--split">
+              <div class="arch-box arch-box--db">
+                <span class="arch-box__label">PostgreSQL</span>
+                <span class="arch-box__detail">users · logins · rooms · reservations</span>
+              </div>
+              <div class="arch-box arch-box--session">
+                <span class="arch-box__label">Session Store</span>
+                <span class="arch-box__detail">Login state (production)</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="developer-section" aria-labelledby="links-heading">
+          <h2 id="links-heading">GitHub Repository</h2>
+          <p>
+            <a class="developer-link-card" href="https://github.com/Software-me/LoreineResortBayLodge" target="_blank" rel="noopener noreferrer">
+              <strong>Software-me / LoreineResortBayLodge</strong>
+              <span>View source code, commit history, and deployment config (render.yaml)</span>
+            </a>
+          </p>
+        </section>
+
+        <section class="developer-section" aria-labelledby="linkedin-heading">
+          <h2 id="linkedin-heading">LinkedIn Profile</h2>
+          <p>
+            <a class="developer-link-card" href="https://www.linkedin.com/in/" target="_blank" rel="noopener noreferrer">
+              <strong>Loreto Eclevia — LinkedIn</strong>
+              <span>Connect for software development opportunities</span>
+            </a>
+          </p>
+        </section>
+
+        <section class="developer-section" aria-labelledby="contact-dev-heading">
+          <h2 id="contact-dev-heading">Contact Information</h2>
+          <div class="developer-contact">
+            <p><strong>Phone:</strong> <a href="tel:+15628105815">(562) 810-5815</a> (text or call)</p>
+            <p><strong>Email:</strong> <a href="mailto:leclevia@my365.bellevue.edu">leclevia@my365.bellevue.edu</a></p>
+            <p><strong>Email:</strong> <a href="mailto:eclevlit2003@yahoo.com">eclevlit2003@yahoo.com</a></p>
+            <p><strong>Facebook Messenger</strong> — available on request</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+<%- include('partials/footer') %>

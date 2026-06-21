@@ -69,6 +69,10 @@ app.get("/attractions", (req, res) => {
   res.render("attractions", { activePage: "attractions" });
 });
 
+app.get("/developer", (req, res) => {
+  res.render("developer", { activePage: "developer" });
+});
+
 app.get("/contact", (req, res) => {
   res.render("contact", { activePage: "contact" });
 });
@@ -85,6 +89,7 @@ const htmlRedirects = {
   "/index.html": "/",
   "/about.html": "/about",
   "/attractions.html": "/attractions",
+  "/developer.html": "/developer",
   "/contact.html": "/contact",
   "/login.html": "/login",
   "/register.html": "/register",

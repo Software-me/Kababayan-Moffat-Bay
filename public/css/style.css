@@ -1062,6 +1062,216 @@ body {
 }
 
 /* ======================================
+   Developer portfolio page
+====================================== */
+.developer-main {
+  background: #f8f9fa;
+  min-height: calc(100vh - 5.5rem);
+}
+
+.developer-hero {
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1rem, 4vw, 2rem);
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+    var(--hero-home);
+  background-size: cover;
+  background-position: center;
+  color: var(--white);
+}
+
+.developer-hero h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: 0.75rem;
+}
+
+.developer-hero__lead {
+  max-width: 40rem;
+  margin: 0 auto;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.developer-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 4rem);
+}
+
+.developer-section {
+  background: var(--white);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.developer-section h2 {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #e8eaed;
+}
+
+.developer-section p {
+  line-height: 1.65;
+  margin-bottom: 0.75rem;
+  color: #222;
+}
+
+.developer-section p:last-child {
+  margin-bottom: 0;
+}
+
+.developer-list {
+  margin: 0.75rem 0 0 1.25rem;
+  line-height: 1.7;
+}
+
+.developer-list code {
+  background: #f0f0f0;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+}
+
+.tech-card {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.tech-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--nav-hover-color);
+}
+
+.tech-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+}
+
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+}
+
+.arch-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.arch-row--split {
+  flex-wrap: wrap;
+}
+
+.arch-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  min-width: min(100%, 14rem);
+  max-width: 20rem;
+}
+
+.arch-box--client {
+  background: #e3f2fd;
+  border-color: #90caf9;
+}
+
+.arch-box--server {
+  background: #e8f5e9;
+  border-color: #81c784;
+}
+
+.arch-box--db {
+  background: #fff3e0;
+  border-color: #ffb74d;
+}
+
+.arch-box--session {
+  background: #f3e5f5;
+  border-color: #ce93d8;
+}
+
+.arch-box__label {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.arch-box__detail {
+  font-size: 0.82rem;
+  color: #444;
+  line-height: 1.4;
+}
+
+.arch-arrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #666;
+}
+
+.developer-link-card {
+  display: block;
+  padding: 1rem 1.25rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.developer-link-card:hover {
+  border-color: var(--nav-hover-color);
+  box-shadow: 0 4px 14px rgba(13, 71, 161, 0.15);
+}
+
+.developer-link-card strong {
+  display: block;
+  color: var(--nav-hover-color);
+  margin-bottom: 0.25rem;
+}
+
+.developer-link-card span {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.developer-contact p {
+  margin-bottom: 0.5rem;
+}
+
+.developer-contact a {
+  color: var(--nav-hover-color);
+  font-weight: 600;
+}
+
+/* ======================================
    Responsive — stack header on narrow screens
 ====================================== */
 @media (max-width: 900px) {
