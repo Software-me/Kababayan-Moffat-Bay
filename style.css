@@ -453,6 +453,35 @@ body {
   margin-top: 1.75rem;
 }
 
+.hero__demo-cta {
+  margin: 1rem 0 1.15rem;
+  padding: 0.9rem 0.75rem;
+  border-radius: 8px;
+  background: rgba(227, 242, 253, 0.95);
+  border: 1px solid #90caf9;
+  text-align: center;
+}
+
+.hero__demo-cta__title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #0d47a1;
+  margin-bottom: 0.35rem;
+}
+
+.hero__demo-cta__text {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 0.65rem;
+}
+
+.hero__demo-cta__btn {
+  margin-top: 0 !important;
+  font-size: 0.88rem;
+  padding: 0.55rem 1.25rem;
+}
+
 /* ======================================
    About page
 ====================================== */
