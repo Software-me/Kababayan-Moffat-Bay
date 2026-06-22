@@ -7,6 +7,7 @@ const express = require("express");
 const session = require("express-session");
 const pgSession = require("connect-pg-simple")(session);
 const { pool, isEmbeddedDb } = require("./db");
+const { formatUsd } = require("./services/pricing");
 
 const authRoutes = require("./routes/auth");
 const reservationRoutes = require("./routes/reservations");
@@ -49,6 +50,8 @@ app.locals.formatDate = (value) => {
   if (value instanceof Date) return value.toLocaleDateString("en-CA");
   return String(value).slice(0, 10);
 };
+
+app.locals.formatUsd = formatUsd;
 
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;

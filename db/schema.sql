@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS reservations (
   status VARCHAR(50) NOT NULL DEFAULT 'Confirmed',
   payment_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
   notes TEXT,
+  nights INTEGER,
+  total_price NUMERIC(10, 2),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   CHECK (end_date > start_date)
 );

@@ -7,33 +7,41 @@
           <p class="error" role="alert"><%= error %></p>
         <% } %>
 
-        <form action="/register" method="post">
+        <form id="register-form" action="/register" method="post" novalidate>
           <div class="form-group">
-            <label for="first_name">First name</label>
+            <label for="first_name" class="label-required">First name</label>
             <input type="text" id="first_name" name="first_name" value="<%= values.first_name || '' %>" required />
           </div>
           <div class="form-group">
-            <label for="last_name">Last name</label>
+            <label for="last_name" class="label-required">Last name</label>
             <input type="text" id="last_name" name="last_name" value="<%= values.last_name || '' %>" required />
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email" class="label-required">Email</label>
             <input type="email" id="email" name="email" value="<%= values.email || '' %>" required />
           </div>
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username" class="label-required">Username</label>
             <input type="text" id="username" name="username" value="<%= values.username || '' %>" required autocomplete="username" />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required autocomplete="new-password" />
+            <label for="password" class="label-required">Password</label>
+            <input type="password" id="password" name="password" required autocomplete="new-password" minlength="6" />
           </div>
-          <button type="submit" class="button">Register</button>
+          <div class="form-group">
+            <label for="confirm_password" class="label-required">Confirm password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" minlength="6" />
+          </div>
+          <p id="password-mismatch" class="field-error-msg field-error-msg--standalone" role="alert" hidden>Passwords do not match.</p>
+          <button type="submit" id="register-submit" class="button">Register</button>
         </form>
         <p style="margin-top: 1.25rem; font-size: 0.95rem">
           Already have an account? <a href="/login">Login</a> · <a href="/">Home</a>
         </p>
       </div>
     </section>
+
+    <script src="/js/form-validation.js"></script>
+    <script src="/js/register-form.js"></script>
 
 <%- include('partials/footer') %>

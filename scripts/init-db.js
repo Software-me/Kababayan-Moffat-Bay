@@ -75,6 +75,9 @@ async function main() {
   console.log("Seeding users and sample reservations...");
   await seedUsers();
 
+  console.log("Applying pricing migration...");
+  await runSqlFile(path.join(__dirname, "..", "db", "migrate-pricing.sql"));
+
   console.log("Database ready.");
   console.log("  Demo login:  demo / demo");
   console.log("  Admin login: admin / admin");

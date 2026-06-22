@@ -53,13 +53,29 @@ async function createReservation({
   startDate,
   endDate,
   notes,
+  nights,
+  totalPrice,
+  paymentStatus,
 }) {
   const result = await query(
     `INSERT INTO reservations
-       (user_id, guest_email, guest_first_name, guest_last_name, room_id, start_date, end_date, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       (user_id, guest_email, guest_first_name, guest_last_name, room_id,
+        start_date, end_date, notes, nights, total_price, payment_status)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
      RETURNING reservation_id`,
-    [userId || null, guestEmail || null, guestFirstName || null, guestLastName || null, roomId, startDate, endDate, notes || null]
+    [
+      userId || null,
+      guestEmail || null,
+      guestFirstName || null,
+      guestLastName || null,
+      roomId,
+      startDate,
+      endDate,
+      notes || null,
+      nights ?? null,
+      totalPrice ?? null,
+      paymentStatus || "Pending",
+    ]
   );
   return result.rows[0].reservation_id;
 }
@@ -67,7 +83,7 @@ async function createReservation({
 async function getReservationById(reservationId) {
   const result = await query(
     `SELECT r.reservation_id, r.user_id, r.guest_email, r.guest_first_name, r.guest_last_name,
-            r.start_date, r.end_date, r.status, r.payment_status, r.notes,
+            r.start_date, r.end_date, r.status, r.payment_status, r.notes, r.nights, r.total_price,
             rm.room_id, rm.room_type, rm.description AS room_description
      FROM reservations r
      JOIN rooms rm ON rm.room_id = r.room_id

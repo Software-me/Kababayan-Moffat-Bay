@@ -58,12 +58,21 @@ router.post("/register", redirectIfLoggedIn, async (req, res) => {
   const email = (req.body.email || "").trim();
   const username = (req.body.username || "").trim();
   const password = req.body.password || "";
+  const confirmPassword = req.body.confirm_password || "";
   const values = { first_name: firstName, last_name: lastName, email, username };
 
-  if (!firstName || !lastName || !email || !username || !password) {
+  if (!firstName || !lastName || !email || !username || !password || !confirmPassword) {
     return res.render("register", {
       activePage: "register",
       error: "All fields are required.",
+      values,
+    });
+  }
+
+  if (password !== confirmPassword) {
+    return res.render("register", {
+      activePage: "register",
+      error: "Passwords do not match.",
       values,
     });
   }

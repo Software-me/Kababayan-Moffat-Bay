@@ -12,17 +12,41 @@ const {
   lookupReservations,
   validateBookingDates,
 } = require("../services/reservations");
+const { NIGHTLY_RATES, calculateStayTotal } = require("../services/pricing");
+const {
+  ensurePlayMoneyBalance,
+  isValidDemoCardNumber,
+  processDemoPayment,
+} = require("../services/playMoney");
 const { requireLogin } = require("../middleware/auth");
 
 const router = express.Router();
 
+function renderBookingForm(req, res, { sessionUser, error, values }) {
+  const playMoneyBalance = ensurePlayMoneyBalance(req.session);
+  return getAllRooms().then((rooms) =>
+    res.render("room_reservation", {
+      activePage: "lodging",
+      rooms,
+      user: sessionUser || null,
+      roomRates: NIGHTLY_RATES,
+      playMoneyBalance,
+      error,
+      values: values || {},
+    })
+  );
+}
+
 router.get("/room_reservation", async (req, res) => {
   try {
+    ensurePlayMoneyBalance(req.session);
     const rooms = await getAllRooms();
     res.render("room_reservation", {
       activePage: "lodging",
       rooms,
       user: req.session.user || null,
+      roomRates: NIGHTLY_RATES,
+      playMoneyBalance: req.session.playMoneyBalance,
       error: null,
       values: {},
     });
@@ -40,6 +64,8 @@ router.post("/room_reservation", async (req, res) => {
   const guestEmail = (req.body.guest_email || "").trim();
   const guestFirstName = (req.body.guest_first_name || "").trim();
   const guestLastName = (req.body.guest_last_name || "").trim();
+  const cardNumber = req.body.card_number || "";
+  const cardName = (req.body.card_name || "").trim();
   const sessionUser = req.session.user;
 
   const values = {
@@ -50,49 +76,72 @@ router.post("/room_reservation", async (req, res) => {
     guest_email: guestEmail,
     guest_first_name: guestFirstName,
     guest_last_name: guestLastName,
+    card_number: cardNumber,
+    card_name: cardName,
   };
 
+  ensurePlayMoneyBalance(req.session);
+
   try {
-    const rooms = await getAllRooms();
     const dateError = validateBookingDates(startDate, endDate);
     if (dateError) {
-      return res.render("room_reservation", {
-        activePage: "lodging",
-        rooms,
-        user: sessionUser,
-        error: dateError,
-        values,
-      });
+      return renderBookingForm(req, res, { sessionUser, error: dateError, values });
     }
 
     const room = await getRoomById(roomId);
     if (!room) {
-      return res.render("room_reservation", {
-        activePage: "lodging",
-        rooms,
-        user: sessionUser,
-        error: "Invalid room selection.",
-        values,
-      });
+      return renderBookingForm(req, res, { sessionUser, error: "Invalid room selection.", values });
     }
 
     if (!sessionUser && (!guestEmail || !guestFirstName || !guestLastName)) {
-      return res.render("room_reservation", {
-        activePage: "lodging",
-        rooms,
-        user: sessionUser,
+      return renderBookingForm(req, res, {
+        sessionUser,
         error: "Please log in or provide your name and email to book as a guest.",
         values,
       });
     }
 
+    if (!cardName) {
+      return renderBookingForm(req, res, { sessionUser, error: "Name on card is required.", values });
+    }
+
+    if (!isValidDemoCardNumber(cardNumber)) {
+      return renderBookingForm(req, res, {
+        sessionUser,
+        error: "Enter a valid 16-digit demo card number (e.g. 4111 1111 1111 1111).",
+        values,
+      });
+    }
+
+    const pricing = calculateStayTotal(roomId, startDate, endDate);
+    if (!pricing) {
+      return renderBookingForm(req, res, {
+        sessionUser,
+        error: "Could not calculate price for the selected stay.",
+        values,
+      });
+    }
+
+    const clientTotal = parseFloat(req.body.total_price);
+    if (!Number.isFinite(clientTotal) || Math.abs(clientTotal - pricing.total) > 0.01) {
+      return renderBookingForm(req, res, {
+        sessionUser,
+        error: "Price mismatch. Please review your dates and room selection.",
+        values,
+      });
+    }
+
+    const payment = processDemoPayment(req.session, pricing.total);
+    if (!payment.ok) {
+      return renderBookingForm(req, res, { sessionUser, error: payment.error, values });
+    }
+
     const available = await isRoomAvailable(roomId, startDate, endDate);
     if (!available) {
-      return res.render("room_reservation", {
-        activePage: "lodging",
-        rooms,
-        user: sessionUser,
-        error: "No rooms of that type are available for the selected dates.",
+      req.session.playMoneyBalance += pricing.total;
+      return renderBookingForm(req, res, {
+        sessionUser,
+        error: "No rooms of that type are available for the selected dates. Your play-money charge was refunded.",
         values,
       });
     }
@@ -106,17 +155,17 @@ router.post("/room_reservation", async (req, res) => {
       startDate,
       endDate,
       notes,
+      nights: pricing.nights,
+      totalPrice: pricing.total,
+      paymentStatus: "Paid",
     });
 
     req.session.lastReservationId = reservationId;
     return res.redirect("/reservation_summary");
   } catch (err) {
     console.error("Booking error:", err);
-    const rooms = await getAllRooms();
-    return res.render("room_reservation", {
-      activePage: "lodging",
-      rooms,
-      user: sessionUser,
+    return renderBookingForm(req, res, {
+      sessionUser,
       error: "Could not complete booking. Please try again.",
       values,
     });
@@ -126,12 +175,20 @@ router.post("/room_reservation", async (req, res) => {
 router.get("/reservation_summary", async (req, res) => {
   const reservationId = req.session.lastReservationId;
   if (!reservationId) {
-    return res.render("reservation_summary", { activePage: "lodging", reservation: null });
+    return res.render("reservation_summary", {
+      activePage: "lodging",
+      reservation: null,
+      playMoneyBalance: ensurePlayMoneyBalance(req.session),
+    });
   }
 
   try {
     const reservation = await getReservationById(reservationId);
-    res.render("reservation_summary", { activePage: "lodging", reservation });
+    res.render("reservation_summary", {
+      activePage: "lodging",
+      reservation,
+      playMoneyBalance: ensurePlayMoneyBalance(req.session),
+    });
   } catch (err) {
     console.error("Summary error:", err);
     res.status(500).render("error", { message: "Could not load reservation summary." });

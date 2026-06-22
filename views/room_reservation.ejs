@@ -1,109 +1,141 @@
 <%- include('partials/header', { title: 'Lodging' }) %>
 
     <script>
-      function validateDates() {
-        var checkInDate = document.getElementsByName("start_date")[0].value;
-        var checkOutDate = document.getElementsByName("end_date")[0].value;
-        if (!checkInDate || !checkOutDate) return true;
-
-        var checkIn = new Date(checkInDate + "T12:00:00");
-        var checkOut = new Date(checkOutDate + "T12:00:00");
-        var today = new Date();
-        today.setHours(0, 0, 0, 0);
-        var checkInDay = new Date(checkInDate + "T12:00:00");
-        checkInDay.setHours(0, 0, 0, 0);
-
-        if (checkInDay <= today) {
-          alert("Check-in date must be in the future.");
-          return false;
-        }
-        if (checkOut <= checkIn) {
-          alert("Check-out date must be at least one day after check-in.");
-          return false;
-        }
-        return true;
-      }
-
-      window.onload = function () {
-        var tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        var tomorrowStr = tomorrow.toISOString().split("T")[0];
-
-        var startDateInput = document.getElementsByName("start_date")[0];
-        var endDateInput = document.getElementsByName("end_date")[0];
-
-        startDateInput.setAttribute("min", tomorrowStr);
-        endDateInput.setAttribute("min", tomorrowStr);
-
-        startDateInput.addEventListener("change", function () {
-          var selectedStart = new Date(this.value + "T12:00:00");
-          selectedStart.setDate(selectedStart.getDate() + 1);
-          var minEndDate = selectedStart.toISOString().split("T")[0];
-          endDateInput.setAttribute("min", minEndDate);
-          if (endDateInput.value && new Date(endDateInput.value) < selectedStart) {
-            endDateInput.value = "";
-          }
-        });
-
-        document.getElementById("booking-form").addEventListener("submit", function (e) {
-          if (!validateDates()) e.preventDefault();
-        });
-      };
+      window.ROOM_RATES = <%- JSON.stringify(roomRates) %>;
+      window.PLAY_MONEY_BALANCE = <%= playMoneyBalance %>;
     </script>
 
     <section class="hero lodging-hero" aria-label="Book your stay">
-      <div class="lodging-hero__panel">
+      <div class="lodging-hero__panel lodging-hero__panel--wide">
         <h1 class="lodging-hero__title">Book Your Stay</h1>
         <p class="lodging-hero__intro">
           <% if (user) { %>
-            Welcome, <%= user.firstName %>! Please fill out the form to book your stay.
+            Welcome, <%= user.firstName %>! Complete your booking and demo checkout below.
           <% } else { %>
-            Welcome, Guest! Log in or enter your details below to book.
+            Welcome, Guest! Enter your details, review pricing, and pay with demo play money.
           <% } %>
+        </p>
+
+        <p class="play-money-balance" aria-live="polite">
+          <strong>Play money balance:</strong> <%= formatUsd(playMoneyBalance) %>
         </p>
 
         <% if (error) { %>
           <p class="error" role="alert"><%= error %></p>
         <% } %>
 
-        <form id="booking-form" class="booking-form" method="post" action="/room_reservation">
-          <label for="start_date">Check-in Date:</label>
-          <input type="date" id="start_date" name="start_date" value="<%= values.start_date || '' %>" required />
+        <form id="booking-form" class="booking-form booking-form--checkout" method="post" action="/room_reservation" novalidate>
+          <input type="hidden" id="total_price" name="total_price" value="" />
 
-          <label for="end_date">Check-out Date:</label>
-          <input type="date" id="end_date" name="end_date" value="<%= values.end_date || '' %>" required />
+          <fieldset class="booking-fieldset">
+            <legend>Stay details</legend>
 
-          <label for="room_id">Room Type:</label>
-          <select id="room_id" name="room_id" required>
-            <% rooms.forEach(function(room) { %>
-              <option value="<%= room.room_id %>" <%= String(values.room_id) === String(room.room_id) ? 'selected' : '' %>>
-                <%= room.room_type %> (<%= room.available_rooms %> available)
-              </option>
-            <% }); %>
-          </select>
+            <div class="form-group">
+              <label for="start_date" class="label-required">Check-in date</label>
+              <input type="date" id="start_date" name="start_date" value="<%= values.start_date || '' %>" required />
+            </div>
 
-          <% if (!user) { %>
-            <label for="guest_first_name">First name:</label>
-            <input type="text" id="guest_first_name" name="guest_first_name" value="<%= values.guest_first_name || '' %>" required />
+            <div class="form-group">
+              <label for="end_date" class="label-required">Check-out date</label>
+              <input type="date" id="end_date" name="end_date" value="<%= values.end_date || '' %>" required />
+            </div>
 
-            <label for="guest_last_name">Last name:</label>
-            <input type="text" id="guest_last_name" name="guest_last_name" value="<%= values.guest_last_name || '' %>" required />
+            <div class="form-group">
+              <label for="room_id" class="label-required">Room type</label>
+              <select id="room_id" name="room_id" required>
+                <% rooms.forEach(function(room) { %>
+                  <option
+                    value="<%= room.room_id %>"
+                    data-rate="<%= roomRates[room.room_id] %>"
+                    <%= String(values.room_id) === String(room.room_id) ? 'selected' : '' %>
+                  >
+                    <%= room.room_type %> — <%= formatUsd(roomRates[room.room_id]) %>/night (<%= room.available_rooms %> available)
+                  </option>
+                <% }); %>
+              </select>
+            </div>
 
-            <label for="guest_email">Email:</label>
-            <input type="email" id="guest_email" name="guest_email" value="<%= values.guest_email || '' %>" required />
-          <% } %>
+            <% if (!user) { %>
+              <div class="form-group">
+                <label for="guest_first_name" class="label-required">First name</label>
+                <input type="text" id="guest_first_name" name="guest_first_name" value="<%= values.guest_first_name || '' %>" required />
+              </div>
+              <div class="form-group">
+                <label for="guest_last_name" class="label-required">Last name</label>
+                <input type="text" id="guest_last_name" name="guest_last_name" value="<%= values.guest_last_name || '' %>" required />
+              </div>
+              <div class="form-group">
+                <label for="guest_email" class="label-required">Email</label>
+                <input type="email" id="guest_email" name="guest_email" value="<%= values.guest_email || '' %>" required />
+              </div>
+            <% } %>
 
-          <label for="notes">Special Requests/Notes:</label>
-          <textarea id="notes" name="notes" rows="4" cols="50" placeholder="Optional"><%= values.notes || '' %></textarea>
+            <div class="form-group">
+              <label for="notes">Special requests / notes</label>
+              <textarea id="notes" name="notes" rows="3" placeholder="Optional"><%= values.notes || '' %></textarea>
+            </div>
+          </fieldset>
 
-          <button type="submit" class="btn btn--primary booking-form__submit">Book Now</button>
+          <div id="price-summary" class="price-summary" hidden>
+            <h2 class="price-summary__title">Price summary</h2>
+            <p><span>Nights:</span> <strong id="price-nights">—</strong></p>
+            <p><span>Rate:</span> <strong id="price-nightly">—</strong></p>
+            <p class="price-summary__total"><span>Total:</span> <strong id="price-total">—</strong></p>
+          </div>
+
+          <fieldset class="booking-fieldset booking-fieldset--payment">
+            <legend>Demo play-money checkout</legend>
+
+            <div class="checkout-layout">
+              <div class="demo-card" aria-hidden="true">
+                <div class="demo-card__badge">DEMO PLAY MONEY</div>
+                <div class="demo-card__chip"></div>
+                <p class="demo-card__number" id="demo-card-number">•••• •••• •••• ••••</p>
+                <div class="demo-card__footer">
+                  <div>
+                    <span class="demo-card__label">Cardholder</span>
+                    <span class="demo-card__name" id="demo-card-name">YOUR NAME</span>
+                  </div>
+                  <div>
+                    <span class="demo-card__label">Expires</span>
+                    <span class="demo-card__exp">NEVER EXPIRES</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="checkout-fields">
+                <div class="form-group">
+                  <label for="card_number" class="label-required">Demo card number</label>
+                  <input
+                    type="text"
+                    id="card_number"
+                    name="card_number"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="4111 1111 1111 1111"
+                    maxlength="19"
+                    required
+                  />
+                  <p class="field-hint">Any 16-digit demo card is accepted. Expiration is not required.</p>
+                </div>
+                <div class="form-group">
+                  <label for="card_name" class="label-required">Name on card</label>
+                  <input type="text" id="card_name" name="card_name" autocomplete="cc-name" placeholder="As shown on card" required />
+                </div>
+                <p id="card-error" class="field-error-msg field-error-msg--standalone" role="alert" hidden></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <button type="submit" id="booking-submit" class="btn btn--primary booking-form__submit" disabled>
+            Complete booking &amp; pay
+          </button>
         </form>
       </div>
     </section>
 
     <section class="room-types" aria-labelledby="room-types-heading">
-      <h2 id="room-types-heading">Available Room Types</h2>
-
+      <h2 id="room-types-heading">Available room types &amp; nightly rates</h2>
       <% rooms.forEach(function(room) { %>
       <div class="room-type">
         <div class="image-container">
@@ -111,11 +143,30 @@
         </div>
         <div class="description">
           <h3><%= room.room_type %></h3>
-          <p>Available rooms: <%= room.available_rooms %></p>
+          <p><strong><%= formatUsd(roomRates[room.room_id]) %></strong> per night · <%= room.available_rooms %> available</p>
           <p><%= room.description %></p>
         </div>
       </div>
       <% }); %>
     </section>
+
+    <script src="/js/form-validation.js"></script>
+    <script src="/js/booking-checkout.js"></script>
+    <script>
+      (function () {
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        var tomorrowStr = tomorrow.toISOString().split("T")[0];
+        var startDateInput = document.getElementById("start_date");
+        var endDateInput = document.getElementById("end_date");
+        startDateInput.setAttribute("min", tomorrowStr);
+        endDateInput.setAttribute("min", tomorrowStr);
+        startDateInput.addEventListener("change", function () {
+          var selectedStart = new Date(this.value + "T12:00:00");
+          selectedStart.setDate(selectedStart.getDate() + 1);
+          endDateInput.setAttribute("min", selectedStart.toISOString().split("T")[0]);
+        });
+      })();
+    </script>
 
 <%- include('partials/footer') %>

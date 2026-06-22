@@ -1,0 +1,2 @@
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS nights INTEGER;
+ALTER TABLE reservations ADD COLUMN IF NOT EXISTS total_price NUMERIC(10, 2);

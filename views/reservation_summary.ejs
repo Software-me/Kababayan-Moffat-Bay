@@ -1,13 +1,16 @@
 <%- include('partials/header', { title: 'Reservation Summary' }) %>
 
     <main class="summary-main">
-      <div class="summary-card">
-        <h1 class="summary-card__title">Reservation summary</h1>
+      <div class="summary-card summary-card--wide">
+        <h1 class="summary-card__title">Booking confirmed</h1>
 
         <% if (!reservation) { %>
           <p class="summary-card__empty">No reservation data found. Start from the lodging page.</p>
           <a href="/room_reservation" class="btn btn--primary">Back to booking</a>
         <% } else { %>
+          <p class="summary-card__success" role="status">
+            Payment successful! Your demo play-money transaction has been processed.
+          </p>
           <dl class="summary-details">
             <dt>Reservation ID</dt>
             <dd><%= reservation.reservation_id %></dd>
@@ -15,18 +18,25 @@
             <dd><%= formatDate(reservation.start_date) %></dd>
             <dt>Check-out</dt>
             <dd><%= formatDate(reservation.end_date) %></dd>
+            <dt>Nights</dt>
+            <dd><%= reservation.nights || '—' %></dd>
             <dt>Room</dt>
             <dd><%= reservation.room_type %></dd>
+            <dt>Total paid</dt>
+            <dd><%= reservation.total_price != null ? formatUsd(Number(reservation.total_price)) : '—' %></dd>
             <dt>Status</dt>
             <dd><%= reservation.status %></dd>
             <dt>Payment</dt>
             <dd><%= reservation.payment_status %></dd>
+            <% if (typeof playMoneyBalance !== 'undefined') { %>
+              <dt>Remaining play balance</dt>
+              <dd><%= formatUsd(playMoneyBalance) %></dd>
+            <% } %>
             <% if (reservation.notes) { %>
               <dt>Notes</dt>
               <dd><%= reservation.notes %></dd>
             <% } %>
           </dl>
-          <p class="summary-card__note">Your reservation has been saved to the database.</p>
           <% if (user) { %>
             <a href="/my_reservations" class="btn btn--primary">My Reservations</a>
           <% } else { %>
