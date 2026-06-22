@@ -736,6 +736,14 @@ body {
   margin-bottom: 1.25rem;
 }
 
+.summary-card__note--email {
+  background: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 6px;
+  padding: 0.65rem 0.85rem;
+  color: #0d47a1;
+}
+
 .summary-card__note code {
   font-size: 0.8em;
 }

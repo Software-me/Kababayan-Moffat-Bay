@@ -2,18 +2,32 @@
 
     <main class="summary-main">
       <div class="summary-card summary-card--wide">
-        <h1 class="summary-card__title">Booking confirmed</h1>
-
         <% if (!reservation) { %>
-          <p class="summary-card__empty">No reservation data found. Start from the lodging page.</p>
-          <a href="/room_reservation" class="btn btn--primary">Back to booking</a>
+          <h1 class="summary-card__title">Reservation not found</h1>
+          <p class="summary-card__empty">We could not load your confirmation. Please check your email or look up your reservation by ID.</p>
+          <a href="/lookup" class="btn btn--primary">Look up reservation</a>
+          <a href="/room_reservation" class="btn btn--outline summary-card__home">Back to booking</a>
         <% } else { %>
+          <h1 class="summary-card__title">Booking confirmed</h1>
           <p class="summary-card__success" role="status">
             Payment successful! Your demo play-money transaction has been processed.
           </p>
+          <% if (emailSent) { %>
+            <p class="summary-card__note summary-card__note--email" role="status">
+              A confirmation email has been sent to <strong><%= reservation.guest_email %></strong>.
+            </p>
+          <% } else if (reservation.guest_email) { %>
+            <p class="summary-card__note">
+              Your reservation is saved. Email confirmation will be sent when SMTP is configured on the server.
+            </p>
+          <% } %>
           <dl class="summary-details">
             <dt>Reservation ID</dt>
             <dd><%= reservation.reservation_id %></dd>
+            <dt>Guest</dt>
+            <dd><%= reservation.guest_first_name %> <%= reservation.guest_last_name %></dd>
+            <dt>Email</dt>
+            <dd><%= reservation.guest_email || '—' %></dd>
             <dt>Check-in</dt>
             <dd><%= formatDate(reservation.start_date) %></dd>
             <dt>Check-out</dt>
@@ -22,7 +36,7 @@
             <dd><%= reservation.nights || '—' %></dd>
             <dt>Room</dt>
             <dd><%= reservation.room_type %></dd>
-            <dt>Total paid</dt>
+            <dt>Total paid (play money)</dt>
             <dd><%= reservation.total_price != null ? formatUsd(Number(reservation.total_price)) : '—' %></dd>
             <dt>Status</dt>
             <dd><%= reservation.status %></dd>
@@ -37,6 +51,7 @@
               <dd><%= reservation.notes %></dd>
             <% } %>
           </dl>
+          <p class="summary-card__note">Save your reservation ID <strong>#<%= reservation.reservation_id %></strong> for your records.</p>
           <% if (user) { %>
             <a href="/my_reservations" class="btn btn--primary">My Reservations</a>
           <% } else { %>

@@ -7,6 +7,8 @@ Full-stack resort reservation web application built with **Node.js**, **Express*
 - User registration and login (bcrypt password hashing, PostgreSQL-backed sessions)
 - Room booking with date validation and overlap-based availability checks
 - Reservation summary and lookup by ID or email
+- Booking confirmation page after play-money checkout (reservation details + payment summary)
+- Optional confirmation email (SMTP) with demo card payment details
 - My Reservations (view and cancel) for logged-in users
 - Admin room inventory management (`admin` / `admin`)
 - Marketing pages: Home, About, Attractions, Contact
@@ -101,6 +103,17 @@ This repo includes a **`render.yaml`** blueprint that provisions:
 6. Open your live URL: `https://loreines-bay-resort-lodge.onrender.com` (or the URL Render assigns).
 
 After setup, **every push to `main` automatically redeploys** the live site.
+
+### Confirmation emails (optional)
+
+After a successful booking, guests see a confirmation page with reservation details. To also email them, set these environment variables on Render (or in `.env` locally):
+
+- `SMTP_HOST`, `SMTP_PORT` (usually `587`)
+- `SMTP_USER`, `SMTP_PASS` (app password for Gmail, etc.)
+- `MAIL_FROM` (e.g. `Loreine's Bay Resort Lodge <you@example.com>`)
+- `APP_URL` (already set in `render.yaml` for production)
+
+If SMTP is not configured, bookings still work — only the email step is skipped.
 
 ### Alternative: Railway
 

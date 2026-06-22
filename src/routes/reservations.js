@@ -23,6 +23,7 @@ const {
   DEMO_CARDHOLDER_NAME,
   DEMO_EXPIRATION_LABEL,
 } = require("../constants/demoPayment");
+const { sendBookingConfirmation } = require("../services/email");
 const { requireLogin } = require("../middleware/auth");
 
 const router = express.Router();
@@ -183,8 +184,33 @@ router.post("/room_reservation", async (req, res) => {
       paymentStatus: "Paid",
     });
 
+    const reservation = await getReservationById(reservationId);
+    const recipientEmail = sessionUser ? sessionUser.email : guestEmail;
+
+    let emailSent = false;
+    try {
+      const emailResult = await sendBookingConfirmation({
+        to: recipientEmail,
+        reservation,
+        playMoneyBalance: req.session.playMoneyBalance,
+      });
+      emailSent = Boolean(emailResult?.sent);
+    } catch (emailErr) {
+      console.error("Confirmation email failed:", emailErr.message);
+    }
+
     req.session.lastReservationId = reservationId;
-    return res.redirect("/reservation_summary");
+    req.session.emailConfirmationSent = emailSent;
+
+    return new Promise((resolve, reject) => {
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          console.error("Session save error:", saveErr);
+        }
+        res.redirect(`/reservation_summary?id=${reservationId}`);
+        resolve();
+      });
+    });
   } catch (err) {
     console.error("Booking error:", err);
     return renderBookingForm(req, res, {
@@ -196,20 +222,36 @@ router.post("/room_reservation", async (req, res) => {
 });
 
 router.get("/reservation_summary", async (req, res) => {
-  const reservationId = req.session.lastReservationId;
+  const queryId = parseInt(req.query.id, 10);
+  const reservationId = queryId || req.session.lastReservationId;
+
   if (!reservationId) {
     return res.render("reservation_summary", {
       activePage: "lodging",
       reservation: null,
+      emailSent: false,
       playMoneyBalance: ensurePlayMoneyBalance(req.session),
     });
   }
 
   try {
     const reservation = await getReservationById(reservationId);
+    if (!reservation) {
+      return res.render("reservation_summary", {
+        activePage: "lodging",
+        reservation: null,
+        emailSent: false,
+        playMoneyBalance: ensurePlayMoneyBalance(req.session),
+      });
+    }
+
+    const emailSent = Boolean(req.session.emailConfirmationSent);
+    delete req.session.emailConfirmationSent;
+
     res.render("reservation_summary", {
       activePage: "lodging",
       reservation,
+      emailSent,
       playMoneyBalance: ensurePlayMoneyBalance(req.session),
     });
   } catch (err) {
