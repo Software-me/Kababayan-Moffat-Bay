@@ -18,9 +18,32 @@ const {
   isValidDemoCardNumber,
   processDemoPayment,
 } = require("../services/playMoney");
+const {
+  DEMO_CARD_NUMBER_DISPLAY,
+  DEMO_CARDHOLDER_NAME,
+  DEMO_EXPIRATION_LABEL,
+} = require("../constants/demoPayment");
 const { requireLogin } = require("../middleware/auth");
 
 const router = express.Router();
+
+const demoPayment = {
+  cardNumber: DEMO_CARD_NUMBER_DISPLAY,
+  cardName: DEMO_CARDHOLDER_NAME,
+  expiration: DEMO_EXPIRATION_LABEL,
+};
+
+function bookingValues(body) {
+  return {
+    start_date: body.start_date,
+    end_date: body.end_date,
+    room_id: parseInt(body.room_id, 10),
+    notes: (body.notes || "").trim(),
+    guest_email: (body.guest_email || "").trim(),
+    guest_first_name: (body.guest_first_name || "").trim(),
+    guest_last_name: (body.guest_last_name || "").trim(),
+  };
+}
 
 function renderBookingForm(req, res, { sessionUser, error, values }) {
   const playMoneyBalance = ensurePlayMoneyBalance(req.session);
@@ -31,6 +54,7 @@ function renderBookingForm(req, res, { sessionUser, error, values }) {
       user: sessionUser || null,
       roomRates: NIGHTLY_RATES,
       playMoneyBalance,
+      demoPayment,
       error,
       values: values || {},
     })
@@ -47,6 +71,7 @@ router.get("/room_reservation", async (req, res) => {
       user: req.session.user || null,
       roomRates: NIGHTLY_RATES,
       playMoneyBalance: req.session.playMoneyBalance,
+      demoPayment,
       error: null,
       values: {},
     });
@@ -68,17 +93,7 @@ router.post("/room_reservation", async (req, res) => {
   const cardName = (req.body.card_name || "").trim();
   const sessionUser = req.session.user;
 
-  const values = {
-    start_date: startDate,
-    end_date: endDate,
-    room_id: roomId,
-    notes,
-    guest_email: guestEmail,
-    guest_first_name: guestFirstName,
-    guest_last_name: guestLastName,
-    card_number: cardNumber,
-    card_name: cardName,
-  };
+  const values = bookingValues(req.body);
 
   ensurePlayMoneyBalance(req.session);
 
@@ -102,13 +117,21 @@ router.post("/room_reservation", async (req, res) => {
     }
 
     if (!cardName) {
-      return renderBookingForm(req, res, { sessionUser, error: "Name on card is required.", values });
+      return renderBookingForm(req, res, { sessionUser, error: "Demo cardholder name is required.", values });
+    }
+
+    if (cardName.toLowerCase() !== DEMO_CARDHOLDER_NAME.toLowerCase()) {
+      return renderBookingForm(req, res, {
+        sessionUser,
+        error: `Play-money checkout only accepts the demo name "${DEMO_CARDHOLDER_NAME}".`,
+        values,
+      });
     }
 
     if (!isValidDemoCardNumber(cardNumber)) {
       return renderBookingForm(req, res, {
         sessionUser,
-        error: "Enter a valid 16-digit demo card number (e.g. 4111 1111 1111 1111).",
+        error: `Play-money checkout only accepts demo card ${DEMO_CARD_NUMBER_DISPLAY}. No real cards are processed.`,
         values,
       });
     }

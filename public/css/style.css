@@ -1407,6 +1407,26 @@ button:disabled,
   font-size: 1.05rem;
 }
 
+.booking-fieldset--payment {
+  border-color: #c5d5f5;
+}
+
+.payment-security-note {
+  font-size: 0.88rem;
+  color: #333;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 1rem;
+  line-height: 1.45;
+}
+
+.demo-fill-btn {
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
 .checkout-layout {
   display: grid;
   grid-template-columns: 1fr;

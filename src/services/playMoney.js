@@ -1,5 +1,7 @@
 "use strict";
 
+const { DEMO_CARD_NUMBER_DIGITS } = require("../constants/demoPayment");
+
 const STARTING_BALANCE = 10000;
 
 function ensurePlayMoneyBalance(session) {
@@ -13,9 +15,9 @@ function normalizeCardNumber(raw) {
   return String(raw || "").replace(/\D/g, "");
 }
 
+/** Only the single approved demo test card is accepted — never real cards. */
 function isValidDemoCardNumber(raw) {
-  const digits = normalizeCardNumber(raw);
-  return digits.length === 16;
+  return normalizeCardNumber(raw) === DEMO_CARD_NUMBER_DIGITS;
 }
 
 function processDemoPayment(session, amount) {

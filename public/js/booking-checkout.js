@@ -10,9 +10,17 @@
     return g.replace(/(.{4})/g, "$1 ").trim() || "•••• •••• •••• ••••";
   }
 
+  function normalizeDigits(value) {
+    return String(value || "").replace(/\D/g, "");
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     var form = document.getElementById("booking-form");
-    if (!form || !window.ROOM_RATES) return;
+    if (!form || !window.ROOM_RATES || !window.DEMO_PAYMENT) return;
+
+    var demo = window.DEMO_PAYMENT;
+    var demoDigits = normalizeDigits(demo.cardNumber);
+    var demoName = demo.cardName;
 
     var startInput = document.getElementById("start_date");
     var endInput = document.getElementById("end_date");
@@ -28,6 +36,7 @@
     var cardDisplayName = document.getElementById("demo-card-name");
     var cardError = document.getElementById("card-error");
     var payBtn = document.getElementById("booking-submit");
+    var fillDemoBtn = document.getElementById("fill-demo-payment");
 
     function countNights() {
       if (!startInput.value || !endInput.value) return 0;
@@ -56,26 +65,43 @@
       return total;
     }
 
-    function cardDigitsValid() {
-      var digits = cardNumber.value.replace(/\D/g, "");
-      return digits.length === 16;
+    function isDemoPaymentValid() {
+      return (
+        normalizeDigits(cardNumber.value) === demoDigits &&
+        cardName.value.trim().toLowerCase() === demoName.toLowerCase()
+      );
     }
 
     function updateCardPreview() {
-      cardDisplayNumber.textContent = formatCardDisplay(cardNumber.value);
-      cardDisplayName.textContent = (cardName.value || "YOUR NAME").toUpperCase();
+      var digits = normalizeDigits(cardNumber.value);
+      cardDisplayNumber.textContent = digits ? formatCardDisplay(digits) : demo.cardNumber;
+      cardDisplayName.textContent = (cardName.value.trim() || demoName).toUpperCase();
     }
 
     function updatePayButton() {
       var total = updatePricing();
-      var cardOk = cardDigitsValid() && cardName.value.trim().length > 0;
-      if (total && !cardOk && cardNumber.value.length > 0 && !cardDigitsValid()) {
+      var paymentOk = isDemoPaymentValid();
+
+      if (total && cardNumber.value.length > 0 && !paymentOk) {
         cardError.hidden = false;
-        cardError.textContent = "Enter a valid 16-digit demo card number.";
+        cardError.textContent =
+          "Play-money only: use card " + demo.cardNumber + " and name \"" + demoName + "\".";
       } else {
         cardError.hidden = true;
       }
-      payBtn.disabled = !(total > 0 && cardOk);
+
+      payBtn.disabled = !(total > 0 && paymentOk);
+    }
+
+    function fillDemoPayment() {
+      cardNumber.value = demo.cardNumber;
+      cardName.value = demoName;
+      updateCardPreview();
+      updatePayButton();
+    }
+
+    if (fillDemoBtn) {
+      fillDemoBtn.addEventListener("click", fillDemoPayment);
     }
 
     [startInput, endInput, roomSelect].forEach(function (el) {
@@ -84,8 +110,8 @@
     });
 
     cardNumber.addEventListener("input", function () {
-      var digits = cardNumber.value.replace(/\D/g, "").slice(0, 16);
-      cardNumber.value = digits.replace(/(.{4})/g, "$1 ").trim();
+      var digits = normalizeDigits(cardNumber.value).slice(0, 16);
+      cardNumber.value = digits ? formatCardDisplay(digits) : "";
       updateCardPreview();
       updatePayButton();
     });
@@ -102,21 +128,18 @@
         alert("Select valid dates and a room to calculate your total.");
         return false;
       }
-      if (!cardDigitsValid()) {
+      if (!isDemoPaymentValid()) {
         cardError.hidden = false;
-        cardError.textContent = "Enter a valid 16-digit demo card number (e.g. 4111 1111 1111 1111).";
+        cardError.textContent =
+          "Play-money only: use card " + demo.cardNumber + " and name \"" + demoName + "\". Real cards are not accepted.";
         cardNumber.focus();
-        return false;
-      }
-      if (!cardName.value.trim()) {
-        window.LoreineFormValidation.markFieldError(cardName, "Name on card is required.");
         return false;
       }
       return true;
     });
 
-    updatePayButton();
     updateCardPreview();
+    updatePayButton();
   });
 
   function validateDates() {
