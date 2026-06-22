@@ -1,0 +1,87 @@
+<%- include('partials/header', { title: 'Admin Dashboard' }) %>
+
+    <main class="admin-main">
+      <section class="admin-hero" aria-labelledby="admin-heading">
+        <h1 id="admin-heading">Owner dashboard</h1>
+        <p>Reservation activity and booking overview for Loreine's Bay Resort Lodge.</p>
+      </section>
+
+      <div class="admin-content">
+        <div class="stats-grid" aria-label="Reservation statistics">
+          <div class="stat-card stat-card--primary">
+            <span class="stat-card__value"><%= stats.total_reservations %></span>
+            <span class="stat-card__label">Total active reservations</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value"><%= stats.registered_users_with_reservations %></span>
+            <span class="stat-card__label">Registered users who booked</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value"><%= stats.guest_reservations %></span>
+            <span class="stat-card__label">Guest bookings (no account)</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value"><%= stats.total_registered_users %></span>
+            <span class="stat-card__label">Total registered accounts</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-card__value"><%= stats.cancelled_reservations %></span>
+            <span class="stat-card__label">Cancelled reservations</span>
+          </div>
+          <div class="stat-card stat-card--revenue">
+            <span class="stat-card__value"><%= formatUsd(Number(stats.total_revenue)) %></span>
+            <span class="stat-card__label">Total play-money collected</span>
+          </div>
+        </div>
+
+        <section class="admin-section" aria-labelledby="recent-heading">
+          <div class="admin-section__header">
+            <h2 id="recent-heading">Recent reservations</h2>
+            <a href="/update_room" class="btn btn--outline btn--sm">Manage rooms</a>
+          </div>
+
+          <% if (recentReservations.length === 0) { %>
+            <p class="admin-empty">No reservations yet.</p>
+          <% } else { %>
+            <div class="table-scroll">
+              <table class="reservations-table admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Guest</th>
+                    <th>Email</th>
+                    <th>Type</th>
+                    <th>Room</th>
+                    <th>Check-in</th>
+                    <th>Check-out</th>
+                    <th>Nights</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Payment</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% recentReservations.forEach(function(r) { %>
+                  <tr>
+                    <td><%= r.reservation_id %></td>
+                    <td><%= r.first_name %> <%= r.last_name %></td>
+                    <td><%= r.email || '—' %></td>
+                    <td><%= r.booking_type %></td>
+                    <td><%= r.room_type %></td>
+                    <td><%= formatDate(r.start_date) %></td>
+                    <td><%= formatDate(r.end_date) %></td>
+                    <td><%= r.nights || '—' %></td>
+                    <td><%= r.total_price != null ? formatUsd(Number(r.total_price)) : '—' %></td>
+                    <td><%= r.status %></td>
+                    <td><%= r.payment_status %></td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+        </section>
+      </div>
+    </main>
+
+<%- include('partials/footer') %>

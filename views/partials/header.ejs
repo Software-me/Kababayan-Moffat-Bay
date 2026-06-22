@@ -31,6 +31,7 @@
         <a href="/contact" class="nav__link<%= activePage === 'contact' ? ' nav__link--active' : '' %>">Contact Us</a>
         <% if (user) { %>
           <% if (user.isAdmin) { %>
+            <a href="/admin" class="nav__link<%= activePage === 'admin-dashboard' ? ' nav__link--active' : '' %>">Dashboard</a>
             <a href="/update_room" class="nav__link<%= activePage === 'admin' ? ' nav__link--active' : '' %>">Manage Rooms</a>
           <% } %>
           <span class="nav__link" style="font-weight:400">Hi, <%= user.firstName %></span>

@@ -101,6 +101,7 @@ const htmlRedirects = {
   "/reservation_summary.html": "/reservation_summary",
   "/my_reservations.html": "/my_reservations",
   "/update_room.html": "/update_room",
+  "/admin.html": "/admin",
 };
 
 Object.entries(htmlRedirects).forEach(([from, to]) => {

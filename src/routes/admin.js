@@ -2,9 +2,25 @@
 
 const express = require("express");
 const { getAllRooms, getRoomById, updateRoomInventory } = require("../services/reservations");
+const { getReservationStats, getRecentReservations } = require("../services/adminStats");
 const { requireAdmin } = require("../middleware/auth");
 
 const router = express.Router();
+
+router.get("/admin", requireAdmin, async (req, res) => {
+  try {
+    const stats = await getReservationStats();
+    const recentReservations = await getRecentReservations();
+    res.render("admin_dashboard", {
+      activePage: "admin-dashboard",
+      stats,
+      recentReservations,
+    });
+  } catch (err) {
+    console.error("Admin dashboard error:", err);
+    res.status(500).render("error", { message: "Could not load admin dashboard." });
+  }
+});
 
 router.get("/update_room", requireAdmin, async (req, res) => {
   try {
