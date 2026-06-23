@@ -88,4 +88,33 @@ async function sendBookingConfirmation({ to, reservation, playMoneyBalance }) {
   return { sent: true };
 }
 
-module.exports = { sendBookingConfirmation, isEmailConfigured, buildConfirmationText };
+const WELCOME_MESSAGE =
+  "Welcome to Loreine's Bay Resort Lodge! You have been successfully registered.";
+
+async function sendWelcomeEmail({ to }) {
+  if (!to) {
+    console.warn("Welcome email skipped: no recipient address.");
+    return { sent: false, reason: "no_email" };
+  }
+
+  if (!isEmailConfigured()) {
+    console.warn(`Welcome email skipped (SMTP not configured). Would send to ${to}.`);
+    return { sent: false, reason: "smtp_not_configured" };
+  }
+
+  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
+  const subject = "Welcome to Loreine's Bay Resort Lodge!";
+
+  const transport = createTransport();
+  await transport.sendMail({ from, to, subject, text: WELCOME_MESSAGE });
+  console.log(`Welcome email sent to ${to}`);
+  return { sent: true };
+}
+
+module.exports = {
+  sendBookingConfirmation,
+  sendWelcomeEmail,
+  isEmailConfigured,
+  buildConfirmationText,
+  WELCOME_MESSAGE,
+};

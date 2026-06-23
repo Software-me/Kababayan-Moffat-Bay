@@ -25,6 +25,7 @@ const {
 } = require("../constants/demoPayment");
 const { sendBookingConfirmation } = require("../services/email");
 const { requireLogin } = require("../middleware/auth");
+const { redirectWithSession } = require("../utils/session");
 
 const router = express.Router();
 
@@ -202,15 +203,7 @@ router.post("/room_reservation", async (req, res) => {
     req.session.lastReservationId = reservationId;
     req.session.emailConfirmationSent = emailSent;
 
-    return new Promise((resolve, reject) => {
-      req.session.save((saveErr) => {
-        if (saveErr) {
-          console.error("Session save error:", saveErr);
-        }
-        res.redirect(`/reservation_summary?id=${reservationId}`);
-        resolve();
-      });
-    });
+    return redirectWithSession(req, res, `/reservation_summary?id=${reservationId}`);
   } catch (err) {
     console.error("Booking error:", err);
     return renderBookingForm(req, res, {
@@ -284,7 +277,7 @@ router.post("/my_reservations/cancel", requireLogin, async (req, res) => {
     console.error("Cancel error:", err);
     req.session.flash = { type: "error", message: "Could not cancel reservation." };
   }
-  res.redirect("/my_reservations");
+  return redirectWithSession(req, res, "/my_reservations");
 });
 
 router.post("/lookup", async (req, res) => {

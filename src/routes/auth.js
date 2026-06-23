@@ -9,6 +9,8 @@ const {
   setSessionUser,
   verifyPassword,
 } = require("../services/auth");
+const { sendWelcomeEmail } = require("../services/email");
+const { redirectWithSession } = require("../utils/session");
 const { redirectIfLoggedIn } = require("../middleware/auth");
 
 const router = express.Router();
@@ -38,7 +40,12 @@ router.post("/login", redirectIfLoggedIn, async (req, res) => {
       return res.render("login", { activePage: "login", error: "Invalid password." });
     }
     setSessionUser(req, account);
-    return res.redirect("/my_reservations");
+    req.session.flash = {
+      type: "success",
+      message: `Welcome, ${account.username}!`,
+      welcome: true,
+    };
+    return redirectWithSession(req, res, "/my_reservations");
   } catch (err) {
     console.error("Login error:", err);
     return res.render("login", {
@@ -49,7 +56,11 @@ router.post("/login", redirectIfLoggedIn, async (req, res) => {
 });
 
 router.get("/register", redirectIfLoggedIn, (req, res) => {
-  res.render("register", { activePage: "register", error: null, values: {} });
+  res.render("register", {
+    activePage: "register",
+    error: null,
+    values: {},
+  });
 });
 
 router.post("/register", redirectIfLoggedIn, async (req, res) => {
@@ -110,8 +121,24 @@ router.post("/register", redirectIfLoggedIn, async (req, res) => {
       email: user.email,
       is_admin: user.is_admin,
     });
-    req.session.flash = { type: "success", message: "Account created. Welcome!" };
-    return res.redirect("/my_reservations");
+
+    let emailSent = false;
+    try {
+      const emailResult = await sendWelcomeEmail({ to: email });
+      emailSent = Boolean(emailResult?.sent);
+    } catch (emailErr) {
+      console.error("Welcome email failed:", emailErr.message);
+    }
+
+    req.session.flash = {
+      type: "success",
+      message: `Welcome, ${username}!`,
+      welcome: true,
+      registration: true,
+      emailSent,
+      registeredEmail: email,
+    };
+    return redirectWithSession(req, res, "/my_reservations");
   } catch (err) {
     console.error("Registration error:", err);
     return res.render("register", {

@@ -43,5 +43,31 @@
     </header>
 
     <% if (flash) { %>
-      <div class="flash flash--<%= flash.type %>" role="status"><%= flash.message %></div>
+      <% if (flash.welcome) { %>
+        <div class="welcome-banner<%= flash.registration ? ' welcome-banner--registration' : '' %>" role="status">
+          <% if (flash.registration) { %>
+            <div class="welcome-banner__icon" aria-hidden="true">
+              <svg class="register-success__check" viewBox="0 0 72 72" width="56" height="56">
+                <circle class="register-success__circle" cx="36" cy="36" r="34" fill="none" stroke-width="3" />
+                <path class="register-success__tick" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" d="M22 37 L32 47 L50 27" />
+              </svg>
+            </div>
+          <% } %>
+          <p class="welcome-banner__title"><%= flash.message %></p>
+          <% if (flash.registration) { %>
+            <p class="welcome-banner__sub">You have successfully registered. You can manage your booking history below or book your first stay.</p>
+            <% if (flash.emailSent) { %>
+              <p class="welcome-banner__email">A welcome email was sent to <strong><%= flash.registeredEmail %></strong>.</p>
+            <% } %>
+            <div class="welcome-banner__actions">
+              <a href="/room_reservation" class="btn btn--primary">Book a Room</a>
+              <a href="/my_reservations" class="btn btn--outline">View Booking History</a>
+            </div>
+          <% } else { %>
+            <p class="welcome-banner__sub">You are signed in. View your reservations below or book a new stay.</p>
+          <% } %>
+        </div>
+      <% } else { %>
+        <div class="flash flash--<%= flash.type %>" role="status"><%= flash.message %></div>
+      <% } %>
     <% } %>
